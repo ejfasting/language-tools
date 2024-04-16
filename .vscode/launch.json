@@ -1,0 +1,21 @@
+// A launch configuration that compiles the extension and then opens it inside a new window
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Web Extension",
+            "type": "extensionHost",
+            "debugWebWorkerHost": true,
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentKind=web",
+                "--extensionDevelopmentPath=${workspaceFolder}/clients/vscode/",
+                "--disable-extensions"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/clients/vscode/dist/**/*.js"
+            ],
+            "preLaunchTask": "npm: build"
+        }
+    ]
+}
