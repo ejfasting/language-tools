@@ -3,19 +3,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Web Extension",
+            "name": "Launch superoffice-vscode-core",
             "type": "extensionHost",
             "debugWebWorkerHost": true,
             "request": "launch",
             "args": [
                 "--extensionDevelopmentKind=web",
-                "--extensionDevelopmentPath=${workspaceFolder}/clients/vscode/",
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/superoffice-vscode-core/",
                 "--disable-extensions"
             ],
             "outFiles": [
-                "${workspaceFolder}/clients/vscode/dist/**/*.js"
+                "${workspaceFolder}/packages/superoffice-vscode-core/dist/**/*.js"
             ],
-            "preLaunchTask": "npm: build"
+            "preLaunchTask": "npm: build-core"
         }
     ]
 }

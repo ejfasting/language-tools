@@ -1,0 +1,73 @@
+{
+    "name": "superoffice-vscode-core",
+    "description": "",
+    "author": "Eivind Fasting",
+    "version": "0.0.1",
+    "publisher": "SuperOffice",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ejfasting/superoffice-vscode"
+    },
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [],
+    "browser": "./dist/client.js",
+    "contributes": {
+        "commands": [
+            {
+              "command": "superoffice-vscode-core.helloWorld",
+              "title": "Hello World"
+            }
+          ],
+          "viewsContainers": {
+            "activitybar": [
+              {
+                "id": "superoffice",
+                "title": "SuperOffice",
+                "icon": "/resources/logo.svg"
+              }
+            ]
+          },
+          "views": {
+            "superoffice": [
+              {
+                "id": "superoffice.views.treeview",
+                "name": "Scripts"
+              },
+              {
+                "id": "superoffice.views.webview",
+                "name": "Webview Scripts",
+                "type": "webview"
+              }
+            ]
+          },
+          "view/item/context": [
+            {
+              "command": "superoffice-vscode-core.helloWorld",
+              "when": "viewItem == superoffice.views.treeview"
+            }
+          ],
+          "viewsWelcome": [
+            {
+              "view": "superoffice.views.treeview",
+              "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:superoffice-vscode.signIn)"
+            }
+          ]
+    },
+    "dependencies": {
+        "vscode-languageclient": "^9.0.1"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.88.0"
+    },
+    "scripts": {
+        "preinstall": "npx only-allow pnpm",
+        "vscode:prepublish": "npm run build:prod",
+        "build": "node build.mjs",
+        "build:prod": "node build.mjs --production"
+    }
+}

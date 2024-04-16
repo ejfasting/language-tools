@@ -17,23 +17,17 @@
     "scripts": {
         "preinstall": "npx only-allow pnpm",
         "vscode:prepublish": "npm run build:prod",
-        "build": "node build.mjs",
-        "build:prod": "node build.mjs --production",
-        "watch": "node build.mjs --watch",
-        "typecheck": "tsc --noEmit",
-        "lint": "eslint \"src/**/*.ts\"",
-        "postinstall": "cd clients/vscode && npm install && cd ../monaco-vite && npm install && cd ../../server && npm install",
-        "open-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=./clients/vscode/",
-        "vsix": "npm run build:prod && cd clients/vscode && vsce package --out ../..",
-        "monaco": "cd clients/monaco-vite && npm run dev"
+        "build": "cd ./packages/superoffice-vscode-core/ && node build.mjs",
+        "build:prod": "cd ./packages/superoffice-vscode-core/ && node build.mjs --production",
+        "build-core": "node ./scripts/build.mjs --extension superoffice-vscode-core"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^6.7.0",
         "@typescript-eslint/parser": "^6.7.0",
+        "@vscode/test-web": "^0.0.53",
+        "@vscode/vsce": "^2.25.0",
+        "esbuild": "^0.20.2",
         "eslint": "^8.26.0",
-        "typescript": "^5.3.2",
-        "esbuild": "^0.19.12",
-        "@vscode/test-web": "^0.0.51",
-        "@vscode/vsce": "^2.24.0"
+        "typescript": "^5.4.5"
     }
 }
