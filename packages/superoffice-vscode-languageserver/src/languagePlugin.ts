@@ -5,11 +5,11 @@ import * as html from 'vscode-html-languageservice';
 export const crmscriptLanguagePlugin: LanguagePlugin = {
 	createVirtualCode(_id, languageId, snapshot) {
 		if (languageId === 'crmscript') {
-			return createcrmscriptCode(snapshot);
+			return createSuperOfficeCode(snapshot);
 		}
 	},
 	updateVirtualCode(_id, _oldVirtualCode, newSnapshot) {
-		return createcrmscriptCode(newSnapshot);
+		return createSuperOfficeCode(newSnapshot);
 	},
 	typescript: {
 		extraFileExtensions: [{ extension: 'crmscript', isMixedContent: true, scriptKind: 7 satisfies ts.ScriptKind.Deferred }],
@@ -37,24 +37,51 @@ export const crmscriptLanguagePlugin: LanguagePlugin = {
 				}
 			}
 			return scripts;
-		},
-		resolveLanguageServiceHost(host) {
-			const fileNames = host.getScriptFileNames();
-			console.log(fileNames);
-			//Now what?
-			return host;
 		}
 	}
 };
 
 const htmlLs = html.getLanguageService();
 
-export interface CrmscriptCode extends VirtualCode {
+export interface HtmlCode extends VirtualCode {
 	// Reuse for custom service plugin
 	htmlDocument: html.HTMLDocument;
 }
 
-function createcrmscriptCode(snapshot: ts.IScriptSnapshot): CrmscriptCode {
+function createSuperOfficeCode(snapshot: ts.IScriptSnapshot): VirtualCode {
+	/*TEST */
+	const text = snapshot.getText(0, snapshot.getLength());
+	const addCode: string = `import * as RTL from "${__dirname.replace(/\\/g, '/')}/cjs/WebApi"; \n`;
+	const newText = addCode + text;
+	/* EnD TEST */
+
+	return {
+		id: 'root',
+		languageId: 'typescript',
+		snapshot: {
+			getText: (start, end) => newText.substring(start, end),
+			getLength: () => newText.length,
+			getChangeRange: () => undefined,
+		},
+		mappings: [{
+			sourceOffsets: [0],
+			generatedOffsets: [addCode.length],
+			lengths: [newText.length],
+			data: {
+				completion: true,
+				format: true,
+				navigation: true,
+				semantic: true,
+				structure: true,
+				verification: true,
+			},
+		}],
+		embeddedCodes: []
+	};
+}
+
+
+function createcrmscriptCode(snapshot: ts.IScriptSnapshot): HtmlCode {
 	const document = html.TextDocument.create('', 'html', 0, snapshot.getText(0, snapshot.getLength()));
 	const htmlDocument = htmlLs.parseHTMLDocument(document);
 
@@ -115,23 +142,24 @@ function createcrmscriptCode(snapshot: ts.IScriptSnapshot): CrmscriptCode {
 				const text = snapshot.getText(root.startTagEnd, root.endTagStart);
 				const lang = root.attributes?.lang;
 				const isTs = lang === 'ts' || lang === '"ts"' || lang === "'ts'";
-
+				
 				/*TEST */
-				const addCode: string = `import { MyCustomType } from "${__dirname.replace(/\\/g, '/')}/custom-types"; \n`;
-				const newCode = addCode + text;
+				const addCode: string = `import * as RTL from "${__dirname.replace(/\\/g, '/')}/cjs/WebApi"; \n`;
+				const newText = addCode + text;
 				/* EnD TEST */
+
 				yield {
 					id: 'script_' + scripts++,
 					languageId: isTs ? 'typescript' : 'javascript',
 					snapshot: {
-						getText: (start, end) => newCode.substring(start, end),
-						getLength: () => newCode.length,
+						getText: (start, end) => newText.substring(start, end),
+						getLength: () => newText.length,
 						getChangeRange: () => undefined,
 					},
 					mappings: [{
 						sourceOffsets: [root.startTagEnd],
-						generatedOffsets: [125],
-						lengths: [newCode.length],
+						generatedOffsets: [addCode.length],
+						lengths: [newText.length],
 						data: {
 							completion: true,
 							format: true,
