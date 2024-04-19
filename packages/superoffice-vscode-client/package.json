@@ -1,0 +1,106 @@
+{
+  "name": "superoffice-vscode-core",
+  "description": "",
+  "author": "Eivind Fasting",
+  "version": "0.0.1",
+  "publisher": "SuperOffice",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ejfasting/superoffice-vscode"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": ["onLanguage:crmscript"],
+  "main": "./dist/client.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "crmscript",
+        "extensions": [
+          ".crmscript"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "crmscript",
+        "scopeName": "text.crmscript.basic",
+        "path": "./syntaxes/crmscript.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.block.javascript": "javascript",
+          "meta.embedded.block.typescript": "typescript"
+        }
+      }
+    ],
+    "commands": [
+      {
+        "command": "superoffice-vscode-core.helloWorld",
+        "title": "Hello World"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "superoffice",
+          "title": "SuperOffice",
+          "icon": "/resources/logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "superoffice": [
+        {
+          "id": "superoffice.views.treeview",
+          "name": "Scripts"
+        },
+        {
+          "id": "superoffice.views.webview",
+          "name": "Webview Scripts",
+          "type": "webview"
+        }
+      ]
+    },
+    "view/item/context": [
+      {
+        "command": "superoffice-vscode-core.helloWorld",
+        "when": "viewItem == superoffice.views.treeview"
+      }
+    ],
+    "viewsWelcome": [
+      {
+        "view": "superoffice.views.treeview",
+        "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:superoffice-vscode.signIn)"
+      }
+    ],
+    "configuration": [
+      {
+          "order": 22,
+          "id": "superoffice-vscode-core",
+          "title": "superoffice-vscode-core",
+          "properties": {
+              "superoffice-vscode-core.trace.server": {
+                  "type": "string",
+                  "scope": "window",
+                  "enum": [
+                      "off",
+                      "messages",
+                      "verbose"
+                  ],
+                  "default": "verbose",
+                  "description": "Traces the communication between VS Code and the superoffice-vscode-languageserver."
+              }
+          }
+      }
+  ]
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "vscode:prepublish": "npm run build:prod",
+    "build": "node ./scripts/build.js",
+    "build:prod": "node ./scripts/build.js --production"
+  }
+}

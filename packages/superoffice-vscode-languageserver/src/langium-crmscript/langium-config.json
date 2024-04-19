@@ -1,0 +1,12 @@
+{
+    "projectName": "Crmscript",
+    "languages": [{
+        "id": "crmscript",
+        "grammar": "src/language/crmscript.langium",
+        "fileExtensions": [".crmscript"],
+        "textMate": {
+            "out": "syntaxes/crmscript.tmLanguage.json"
+        }
+    }],
+    "out": "src/language/generated"
+}

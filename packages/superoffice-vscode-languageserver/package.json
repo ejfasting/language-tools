@@ -1,0 +1,25 @@
+{
+    "name": "superoffice-vscode-languageserver",
+    "description": "",
+    "author": "Eivind Fasting",
+    "version": "0.0.1",
+    "publisher": "SuperOffice",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ejfasting/superoffice-vscode"
+    },
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "type": "module",
+    "categories": [
+        "Other"
+    ],
+    "main": "./dist/server.js",
+    "scripts": {
+        "preinstall": "npx only-allow pnpm",
+        "vscode:prepublish": "npm run build:prod",
+        "build": "node ./scripts/build.mjs",
+        "build:prod": "node ./scripts/build.mjs --production"
+    }
+}
