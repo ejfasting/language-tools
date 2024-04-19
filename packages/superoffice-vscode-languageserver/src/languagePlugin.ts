@@ -38,7 +38,13 @@ export const crmscriptLanguagePlugin: LanguagePlugin = {
 			}
 			return scripts;
 		},
-	},
+		resolveLanguageServiceHost(host) {
+			const fileNames = host.getScriptFileNames();
+			console.log(fileNames);
+			//Now what?
+			return host;
+		}
+	}
 };
 
 const htmlLs = html.getLanguageService();
@@ -83,7 +89,7 @@ function createcrmscriptCode(snapshot: ts.IScriptSnapshot): CrmscriptCode {
 				const styleText = snapshot.getText(root.startTagEnd, root.endTagStart);
 				yield {
 					id: 'style_' + styles++,
-					languageId: 'css',
+					languageId: 'crmscript',
 					snapshot: {
 						getText: (start, end) => styleText.substring(start, end),
 						getLength: () => styleText.length,
@@ -109,18 +115,23 @@ function createcrmscriptCode(snapshot: ts.IScriptSnapshot): CrmscriptCode {
 				const text = snapshot.getText(root.startTagEnd, root.endTagStart);
 				const lang = root.attributes?.lang;
 				const isTs = lang === 'ts' || lang === '"ts"' || lang === "'ts'";
+
+				/*TEST */
+				const addCode: string = `import { MyCustomType } from "${__dirname.replace(/\\/g, '/')}/custom-types"; \n`;
+				const newCode = addCode + text;
+				/* EnD TEST */
 				yield {
 					id: 'script_' + scripts++,
 					languageId: isTs ? 'typescript' : 'javascript',
 					snapshot: {
-						getText: (start, end) => text.substring(start, end),
-						getLength: () => text.length,
+						getText: (start, end) => newCode.substring(start, end),
+						getLength: () => newCode.length,
 						getChangeRange: () => undefined,
 					},
 					mappings: [{
 						sourceOffsets: [root.startTagEnd],
-						generatedOffsets: [0],
-						lengths: [text.length],
+						generatedOffsets: [125],
+						lengths: [newCode.length],
 						data: {
 							completion: true,
 							format: true,

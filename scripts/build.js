@@ -1,6 +1,6 @@
 require('esbuild').context({
 	entryPoints: {
-		client: '../packages/superoffice-vscode-client/src/client.ts',
+		client: '../packages/superoffice-vscode-client/src/extension.ts',
 		server: '../packages/superoffice-vscode-languageserver/src/server.ts',
 	},
 	sourcemap: true,

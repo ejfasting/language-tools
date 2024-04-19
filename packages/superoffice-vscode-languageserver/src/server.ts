@@ -55,7 +55,7 @@ connection.onInitialize(params => {
 							};
 						},
 					},
-					createCrmscriptService,
+					createCrmscriptService(),
 				];
 			},
 		},

@@ -31,6 +31,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 			typescript: {
 				tsdk: (await getTsdk(context)).tsdk,
 			},
+			plugins: [
+				{
+					name: "@vue/typescript-plugin",
+					location: "/usr/local/lib/node_modules/@vue/language-server",
+					languages: ["crmscript"],
+				},
+			],
 		},
 	};
 	client = new lsp.LanguageClient(
