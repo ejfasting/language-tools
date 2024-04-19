@@ -2,15 +2,14 @@
 
 ## Introduction
 
-This repository contains the source code for SuperOffice Extensions for VS Code
+This repository contains the source code for SuperOffice Extensions and the underlying languageserver
 
 Currently, we have the following extensions:
 
-- superoffice-vscode-core
-   A top-level extension pack that contributes a viewContainer to the default vscode UX.
+- superoffice-vscode-client
 
-- superoffice-vscode-language
-    This extension contains the Language Server to provide features such as syntax highlighting and code completions
+- superoffice-vscode-languageserver
+    Also contains the langium framework, used for crmscript definitions
 
 ### Getting Started
 
