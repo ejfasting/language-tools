@@ -30,14 +30,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 		initializationOptions: {
 			typescript: {
 				tsdk: (await getTsdk(context)).tsdk,
-			},
-			plugins: [
-				{
-					name: "@vue/typescript-plugin",
-					location: "/usr/local/lib/node_modules/@vue/language-server",
-					languages: ["crmscript"],
-				},
-			],
+			}
 		},
 	};
 	client = new lsp.LanguageClient(
@@ -59,7 +52,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from superoffice-vscode-core in a web extension host!');
+		vscode.window.showInformationMessage('Hello World from superoffice-vscode-core!');
 	});
 
 	context.subscriptions.push(disposable);
