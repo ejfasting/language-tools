@@ -89,7 +89,7 @@ function createcrmscriptCode(snapshot: ts.IScriptSnapshot): CrmscriptCode {
 				const styleText = snapshot.getText(root.startTagEnd, root.endTagStart);
 				yield {
 					id: 'style_' + styles++,
-					languageId: 'crmscript',
+					languageId: 'crmscript', //TEST - To see if the crmscriptLanguageService actually gives the completion items through the langium import
 					snapshot: {
 						getText: (start, end) => styleText.substring(start, end),
 						getLength: () => styleText.length,
