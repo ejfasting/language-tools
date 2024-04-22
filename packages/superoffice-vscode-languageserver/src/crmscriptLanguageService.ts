@@ -1,4 +1,4 @@
-import { DocumentSelector, ServicePlugin, ServicePluginInstance, TextDocument } from '@volar/language-server';
+import { DocumentSelector, ServicePlugin, ServicePluginInstance } from '@volar/language-server';
 
 import { createCrmscriptServices } from './langium-crmscript/src/language/crmscript-module.js';
 import { NodeFileSystem } from 'langium/node';

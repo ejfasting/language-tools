@@ -1,5 +1,5 @@
 import { editor, languages } from 'monaco-editor';
-import { setupMonacoEnvcrmscript } from './setup-crmscript';
+import { setupMonacoEnvcrmscript } from './crmscript/setup-crmscript';
 
 export const languageId: string = 'crmscript';
 export const fileExtension: string = '.crmscript';
@@ -20,10 +20,7 @@ await setupMonacoEnvcrmscript();
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
-	const editorInstance = editor.create(rootElement, {
-		theme: 'vitesse-dark'
-	});
-	console.log(languages.getLanguages());
+	const editorInstance = editor.create(rootElement);
 	editorInstance.setModel(editor.createModel('const foo = () => 0;', languageId));
 	document.body.appendChild(rootElement);
 }

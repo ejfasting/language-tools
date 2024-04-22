@@ -3,7 +3,7 @@ import { editor, languages } from 'monaco-editor';
 import editorWorker from 'monaco-editor-core/esm/vs/editor/editor.worker?worker';
 
 import crmscriptWorker from './crmscript-worker?worker';
-import {languageId, fileExtension} from './main';
+import {languageId, fileExtension} from '../main';
 
 import * as vls from '@volar/language-service';
 import * as volar from '@volar/monaco';
