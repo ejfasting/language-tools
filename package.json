@@ -19,7 +19,8 @@
         "vscode:prepublish": "npm run build:prod",
         "build:prod": "cd ./packages/superoffice-vscode-client/ && node build.mjs --production",
         "build": "cd ./scripts && node build.js",
-        "build:langium": "npm run langium:generate --prefix ./packages/superoffice-vscode-languageserver/src/langium-crmscript/"
+        "build:langium": "npm run langium:generate --prefix ./packages/superoffice-vscode-languageserver/src/langium-crmscript/",
+        "monaco": "npm run dev --prefix ./packages/monaco-vite/"
     },
     "devDependencies": {
         "@types/node": "^20.12.7",

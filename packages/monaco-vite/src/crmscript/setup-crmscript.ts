@@ -11,6 +11,9 @@ import * as volar from '@volar/monaco';
 export const setupMonacoEnvcrmscript = async () => {
   
   languages.register({ id: languageId, extensions: [fileExtension] });
+
+  languages.onLanguage(languageId, () => {console.log(languageId);});
+
   self.MonacoEnvironment ??= {};
 
   self.MonacoEnvironment.getWorker = (_: any, label: string) => {
@@ -19,6 +22,8 @@ export const setupMonacoEnvcrmscript = async () => {
     }
     return new editorWorker();
   };
+
+
 
   const worker = editor.createWebWorker<vls.LanguageService>({
     moduleId: 'vs/language/crmscript/crmscriptWorker',
