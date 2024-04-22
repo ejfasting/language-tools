@@ -73,8 +73,6 @@ function createSuperOfficeCode(snapshot: ts.IScriptSnapshot, languageId: string)
 		//console.log('EJSCRIPT_START not found. It means we can skip this, since it\'s a standard JavaScript file');
 
 		//const addCode = `import * as RTL from "${__dirname.replace(/\\/g, '/')}/cjs/WebApi"; \n`;
-		//C:\Github\ejfasting\superoffice-vscode\packages\superoffice-vscode-client\dist\custom-types.d.ts
-		//const addCode = `import * as RTL from "C:/Github/ejfasting/superoffice-vscode/packages/superoffice-vscode-client/dist/cjs/WebApi.d.ts"; \n`;
 		const addCode = "";
 		const newText = addCode + text;
 
