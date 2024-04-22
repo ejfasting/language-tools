@@ -1,4 +1,4 @@
-import { editor } from 'monaco-editor';
+import { Uri, editor } from 'monaco-editor';
 import { setupMonacoEnvcrmscript } from './crmscript/setup-crmscript';
 
 export const languageId: string = 'crmscript';
@@ -21,6 +21,6 @@ await setupMonacoEnvcrmscript();
 const rootElement = document.getElementById('root');
 if (rootElement) {
 	const editorInstance = editor.create(rootElement);
-	editorInstance.setModel(editor.createModel('const foo = () => 0;', languageId));
+	editorInstance.setModel(editor.createModel('const foo = () => 0;', '', Uri.parse('file:///main.crmscript')));
 	document.body.appendChild(rootElement);
 }

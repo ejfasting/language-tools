@@ -9,8 +9,8 @@ import {
 import { create as createCrmscriptService } from "../../../superoffice-vscode-languageserver/src/crmscriptLanguageService.js";
 import { crmscriptLanguagePlugin } from "../../../superoffice-vscode-languageserver/src/languagePlugin.js";
 
-import * as ts from 'typescript';
-import { create as createTypeScriptService } from 'volar-service-typescript';
+ import ts from 'typescript';
+ import { create as createTypeScriptService } from 'volar-service-typescript';
 
 self.onmessage = () => {
 	worker.initialize((ctx: monaco.worker.IWorkerContext) => {
@@ -32,11 +32,12 @@ self.onmessage = () => {
 						workerContext: ctx,
 						env,
 						languagePlugins: [
-							// ...
+							crmscriptLanguagePlugin
 						],
 						servicePlugins: [
 							// ...
 							...createTypeScriptService(ts),
+							createCrmscriptService()
 						],
 					});
 

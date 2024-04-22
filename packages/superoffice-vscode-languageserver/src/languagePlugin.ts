@@ -3,7 +3,9 @@ import type * as ts from 'typescript';
 
 export const crmscriptLanguagePlugin: LanguagePlugin = {
 	createVirtualCode(_id, languageId, snapshot) {
+		if (languageId === 'crmscript') {
 			return createSuperOfficeCode(snapshot, languageId);
+		}
 	},
 	updateVirtualCode(_id, _oldVirtualCode, newSnapshot) {
 		return createSuperOfficeCode(newSnapshot, '');
@@ -68,20 +70,14 @@ function createSuperOfficeCode(snapshot: ts.IScriptSnapshot, languageId: string)
 	const ejscriptStart = text.indexOf(_SCRIPT_START);
 	// EJSCRIPT_START not found. It means we can skip this, since it's standard typescript content
 	if (ejscriptStart === -1) {
-		console.log('EJSCRIPT_START not found. It means we can skip this, since it\'s a standard JavaScript file');
+		//console.log('EJSCRIPT_START not found. It means we can skip this, since it\'s a standard JavaScript file');
 
-		let newText:string = text;
-		let addCode: string = '';
-		console.log(languageId);
-		if(languageId === 'crmscript') {
+		//const addCode = `import * as RTL from "${__dirname.replace(/\\/g, '/')}/cjs/WebApi"; \n`;
+		//C:\Github\ejfasting\superoffice-vscode\packages\superoffice-vscode-client\dist\custom-types.d.ts
+		//const addCode = `import * as RTL from "C:/Github/ejfasting/superoffice-vscode/packages/superoffice-vscode-client/dist/cjs/WebApi.d.ts"; \n`;
+		const addCode = "";
+		const newText = addCode + text;
 
-			addCode = `import * as RTL from "${__dirname.replace(/\\/g, '/')}/cjs/WebApi"; \n`;
-			newText = addCode + text;
-		}
-		else{
-			addCode = `import * as RTL from "C:/Github/ejfasting/superoffice-vscode/packages/superoffice-vscode-client/dist/custom-types.d.ts"; \n`;
-			newText = text;
-		}
 		return {
 			id: 'root',
 			languageId: 'typescript',
@@ -113,7 +109,7 @@ function createSuperOfficeCode(snapshot: ts.IScriptSnapshot, languageId: string)
 	//TODO: create logic for the embedded languages. Also extract this logic into its own file..
 	return {
 		id: 'root',
-		languageId: 'typescript',
+		languageId: 'crmscript',
 		snapshot: {
 			getText: (start, end) => newText.substring(start, end),
 			getLength: () => newText.length,
