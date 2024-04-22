@@ -15,18 +15,21 @@ export function create({
         create(context): ServicePluginInstance {
             return {
                 async provideCompletionItems(document, position, token) {
-                    if (isCrmScriptDocument(document.languageId)) {
+                    if(documentSelector[0] !== "crmscript"){
                         const langiumDocument = shared.workspace.LangiumDocumentFactory.fromTextDocument(document);
                         const params = { textDocument: document, position: position };
                         const result = await Crmscript.lsp.CompletionProvider?.getCompletion(langiumDocument, params);
                         return result;
                     }
+                    //if (isCrmScriptDocument(document.languageId)) {
+                        
+                    //}
                 },
             };
         },
     };
 }
 
-function isCrmScriptDocument(languageId: string) {
-    return languageId === 'crmscript';
-}
+// function isCrmScriptDocument(languageId: string) {
+//     return languageId === 'crmscript';
+// }

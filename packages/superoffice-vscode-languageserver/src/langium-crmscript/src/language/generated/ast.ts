@@ -62,7 +62,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
         return ['Greeting', 'Model', 'Person'];
     }
 
-    protected override computeIsSubtype(subtype: string, supertype: string): boolean {
+    protected override computeIsSubtype(subtype: string, _: string): boolean {
         switch (subtype) {
             default: {
                 return false;

@@ -1,4 +1,4 @@
-import { editor, languages } from 'monaco-editor';
+import { editor } from 'monaco-editor';
 import { setupMonacoEnvcrmscript } from './crmscript/setup-crmscript';
 
 export const languageId: string = 'crmscript';

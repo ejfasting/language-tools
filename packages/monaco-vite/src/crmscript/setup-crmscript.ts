@@ -7,12 +7,11 @@ import {languageId, fileExtension} from '../main';
 
 import * as vls from '@volar/language-service';
 import * as volar from '@volar/monaco';
+import { loadTheme } from '../themes';
 
 export const setupMonacoEnvcrmscript = async () => {
   
   languages.register({ id: languageId, extensions: [fileExtension] });
-
-  languages.onLanguage(languageId, () => {console.log(languageId);});
 
   self.MonacoEnvironment ??= {};
 
@@ -23,13 +22,14 @@ export const setupMonacoEnvcrmscript = async () => {
     return new editorWorker();
   };
 
-
-
   const worker = editor.createWebWorker<vls.LanguageService>({
     moduleId: 'vs/language/crmscript/crmscriptWorker',
     label: languageId,
     createData: {}
   });
+
+  const theme = loadTheme(editor);
+  editor.setTheme((await theme).dark);
 
   // worker
   const languageIds = [languageId];

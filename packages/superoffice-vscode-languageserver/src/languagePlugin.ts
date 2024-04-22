@@ -3,12 +3,10 @@ import type * as ts from 'typescript';
 
 export const crmscriptLanguagePlugin: LanguagePlugin = {
 	createVirtualCode(_id, languageId, snapshot) {
-		if (languageId === 'crmscript') {
-			return createSuperOfficeCode(snapshot);
-		}
+			return createSuperOfficeCode(snapshot, languageId);
 	},
 	updateVirtualCode(_id, _oldVirtualCode, newSnapshot) {
-		return createSuperOfficeCode(newSnapshot);
+		return createSuperOfficeCode(newSnapshot, '');
 	},
 	typescript: {
 		extraFileExtensions: [{ extension: 'crmscript', isMixedContent: true, scriptKind: 7 satisfies ts.ScriptKind.Deferred }],
@@ -41,7 +39,7 @@ export const crmscriptLanguagePlugin: LanguagePlugin = {
 };
 
 const _SCRIPT_START = '%EJSCRIPT_START%';
-const _SCRIPT_END = '%EJSCRIPT_END%';
+//const _SCRIPT_END = '%EJSCRIPT_END%';
 const _SCRIPT_INCLUDE_START = '<%';
 const _SCRIPT_INCLUDE_END = '%>';
 
@@ -64,7 +62,7 @@ function blankOutNonScriptContent(text: string): string {
     return result;
 }
 
-function createSuperOfficeCode(snapshot: ts.IScriptSnapshot): VirtualCode {
+function createSuperOfficeCode(snapshot: ts.IScriptSnapshot, languageId: string): VirtualCode {
 	const text = snapshot.getText(0, snapshot.getLength());
 
 	const ejscriptStart = text.indexOf(_SCRIPT_START);
@@ -72,8 +70,18 @@ function createSuperOfficeCode(snapshot: ts.IScriptSnapshot): VirtualCode {
 	if (ejscriptStart === -1) {
 		console.log('EJSCRIPT_START not found. It means we can skip this, since it\'s a standard JavaScript file');
 
-		const addCode: string = `import * as RTL from "${__dirname.replace(/\\/g, '/')}/cjs/WebApi"; \n`;
-		const newText = addCode + text;
+		let newText:string = text;
+		let addCode: string = '';
+		console.log(languageId);
+		if(languageId === 'crmscript') {
+
+			addCode = `import * as RTL from "${__dirname.replace(/\\/g, '/')}/cjs/WebApi"; \n`;
+			newText = addCode + text;
+		}
+		else{
+			addCode = `import * as RTL from "C:/Github/ejfasting/superoffice-vscode/packages/superoffice-vscode-client/dist/custom-types.d.ts"; \n`;
+			newText = text;
+		}
 		return {
 			id: 'root',
 			languageId: 'typescript',
