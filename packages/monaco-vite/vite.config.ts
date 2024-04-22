@@ -1,13 +1,18 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
+import * as path from "path";
 
-//https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [
-    ],
-    resolve: {
-        dedupe: ['monaco-editor']
+  base: "/monaco-volar/",
+  optimizeDeps: {
+    include: ["path-browserify", "@vue/language-service", "monaco-editor-core"],
+  },
+  resolve: {
+    alias: {
+      path: "path-browserify",
     },
-    build: {
-        target: "ES2022"
-    },
+  },
+  build: {
+    minify: false,
+    outDir: path.resolve(__dirname, "./out"),
+  },
 });
