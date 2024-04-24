@@ -58,7 +58,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposable);
 
-	//TODO: Get volar labs to work.. 
+	//TODO: Volar labs needs to be active in the debug-window for the extension, so you can run it with --disable-extensions if you want the proper intellisense.. 
 	const labsInfo = createLabsInfo(serverProtocol);
 	labsInfo.addLanguageClient(client);
 	return labsInfo.extensionExports;
