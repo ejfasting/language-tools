@@ -6,8 +6,8 @@ import {
 } from '@volar/monaco/worker';
 
 
-import { create as crmscriptLanguageService } from "../../superoffice-vscode-languageserver/src/crmscriptLanguageService.js";
-import { superofficeLanguagePlugin } from "../../superoffice-vscode-languageserver/src/superofficeLanguagePlugin.js";
+import { create as crmscriptLanguageService } from "@superoffice/language-service/crmscriptLanguageService";
+import { superofficeLanguagePlugin } from "@superoffice/language-service/superofficeLanguagePlugin";
 
 import ts from 'typescript';
 import { create as createTypeScriptService } from 'volar-service-typescript';

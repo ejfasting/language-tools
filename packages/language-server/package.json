@@ -1,12 +1,12 @@
 {
-    "name": "superoffice-vscode-languageserver",
+    "name": "@superoffice/language-server",
     "description": "",
     "author": "Eivind Fasting",
     "version": "0.0.1",
     "publisher": "SuperOffice",
     "repository": {
         "type": "git",
-        "url": "https://github.com/ejfasting/superoffice-vscode"
+        "url": "https://github.com/ejfasting/language-tools"
     },
     "engines": {
         "vscode": "^1.85.0"

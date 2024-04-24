@@ -1,7 +1,12 @@
 {
-  "name": "monaco-vite",
+  "name": "@superoffice/monaco",
   "private": true,
   "version": "0.0.0",
+  "publisher": "SuperOffice",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ejfasting/language-tools"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",

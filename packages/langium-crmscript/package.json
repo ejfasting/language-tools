@@ -1,7 +1,12 @@
 {
-    "name": "langium-crmscript",
+    "name": "@superoffice/langium-crmscript",
     "description": "Please enter a brief description here",
     "version": "0.0.1",
+    "publisher": "SuperOffice",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ejfasting/language-tools"
+  },
     "files": [
         "out",
         "src"

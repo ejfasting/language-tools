@@ -1,16 +1,16 @@
 require('esbuild').context({
 	entryPoints: {
-		client: '../packages/superoffice-vscode-client/src/extension.ts',
-		server: '../packages/superoffice-vscode-languageserver/src/server.ts',
+		client: './src/extension.ts',
+		server: '../../packages/language-server/server.ts',
 	},
 	sourcemap: true,
 	bundle: true,
 	metafile: process.argv.includes('--metafile'),
-	outdir: '../packages/superoffice-vscode-client/dist',
+	outdir: './dist',
 	external: ['vscode'],
 	format: 'cjs',
 	platform: 'node',
-	tsconfig: '../packages/superoffice-vscode-client/tsconfig.json',
+	tsconfig: './tsconfig.json',
 	define: { 'process.env.NODE_ENV': '"production"' },
 	minify: process.argv.includes('--minify'),
 	plugins: [

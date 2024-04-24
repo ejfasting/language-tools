@@ -16,11 +16,12 @@
     },
     "scripts": {
         "preinstall": "npx only-allow pnpm",
+        "createLinks": "pnpm link ./packages/language-service && pnpm link ./packages/language-server && pnpm link ./packages/llangium-crmscript",
         "vscode:prepublish": "npm run build:prod",
-        "build:prod": "cd ./packages/superoffice-vscode-client/ && node build.mjs --production",
-        "build": "cd ./scripts && node build.js",
-        "build:langium": "npm run langium:generate --prefix ./packages/superoffice-vscode-languageserver/src/langium-crmscript/",
-        "monaco": "npm run dev --prefix ./packages/monaco-vite/"
+        "build:prod": "npm run build:prod --prefix ./clients/vscode",
+        "build:vscode": "npm run build --prefix ./clients/vscode",
+        "build:langium": "npm run langium:generate --prefix ./packages/langium-crmscript/",
+        "monaco": "npm run dev --prefix ./clients/monaco/"
     },
     "devDependencies": {
         "@types/node": "^20.12.7",
@@ -33,14 +34,14 @@
         "esbuild": "^0.20.2",
         "eslint": "^8.57.0",
         "langium-cli": "^3.0.1",
-        "langium-crmscript": "link:packages\\superoffice-vscode-languageserver\\src\\langium-crmscript",
-        "monaco-vite": "link:packages\\monaco-vite",
-        "superoffice-vscode-client": "link:packages\\superoffice-vscode-client",
         "typescript": "^5.4.5",
         "vite": "^5.2.10",
         "vscode-languageclient": "^9.0.1"
     },
     "dependencies": {
+        "@superoffice/langium-crmscript": "link:packages\\langium-crmscript",
+        "@superoffice/language-server": "link:packages\\language-server",
+        "@superoffice/language-service": "link:packages\\language-service",
         "@volar/language-core": "^2.1.6",
         "@volar/language-server": "^2.1.6",
         "@volar/language-service": "^2.1.6",
@@ -48,7 +49,6 @@
         "langium": "^3.0.0",
         "monaco-editor": "^0.47.0",
         "monaco-editor-core": "^0.47.0",
-        "superoffice-vscode-languageserver": "link:packages\\superoffice-vscode-languageserver",
         "volar-service-css": "^0.0.34",
         "volar-service-emmet": "^0.0.34",
         "volar-service-html": "^0.0.34",

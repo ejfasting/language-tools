@@ -5,6 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@superoffice/langium-crmscript':
+    specifier: link:packages\langium-crmscript
+    version: link:packages/langium-crmscript
+  '@superoffice/language-server':
+    specifier: link:packages\language-server
+    version: link:packages/language-server
+  '@superoffice/language-service':
+    specifier: link:packages\language-service
+    version: link:packages/language-service
   '@volar/language-core':
     specifier: ^2.1.6
     version: 2.1.6
@@ -26,9 +35,6 @@ dependencies:
   monaco-editor-core:
     specifier: ^0.47.0
     version: 0.47.0
-  superoffice-vscode-languageserver:
-    specifier: link:packages\superoffice-vscode-languageserver
-    version: link:packages/superoffice-vscode-languageserver
   volar-service-css:
     specifier: ^0.0.34
     version: 0.0.34(@volar/language-service@2.1.6)
@@ -76,15 +82,6 @@ devDependencies:
   langium-cli:
     specifier: ^3.0.1
     version: 3.0.3
-  langium-crmscript:
-    specifier: link:packages\superoffice-vscode-languageserver\src\langium-crmscript
-    version: link:packages/superoffice-vscode-languageserver/src/langium-crmscript
-  monaco-vite:
-    specifier: link:packages\monaco-vite
-    version: link:packages/monaco-vite
-  superoffice-vscode-client:
-    specifier: link:packages\superoffice-vscode-client
-    version: link:packages/superoffice-vscode-client
   typescript:
     specifier: ^5.4.5
     version: 5.4.5
