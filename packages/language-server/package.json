@@ -8,14 +8,7 @@
         "type": "git",
         "url": "https://github.com/ejfasting/language-tools"
     },
-    "engines": {
-        "vscode": "^1.85.0"
-    },
     "type": "module",
-    "categories": [
-        "Other"
-    ],
-    "main": "./dist/server.js",
     "scripts": {
         "preinstall": "npx only-allow pnpm",
         "vscode:prepublish": "npm run build:prod",

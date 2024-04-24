@@ -11,8 +11,8 @@ import { loadTheme } from './themes';
 
 export const setupMonacoEnv = async () => {
   
-  languages.register({ id: languageId, extensions: [fileExtension] });
-
+  languages.register({ id: languageId, extensions: [fileExtension] }); 
+ 
   self.MonacoEnvironment ??= {};
 
   self.MonacoEnvironment.getWorker = (_: any, label: string) => {

@@ -4,11 +4,11 @@ import type * as ts from 'typescript';
 export const superofficeLanguagePlugin: LanguagePlugin = {
 	createVirtualCode(_id, languageId, snapshot) {
 		if (languageId === 'suo') {
-			return createSuperOfficeCode(snapshot, languageId);
+			return createSuperOfficeCode(snapshot);
 		}
 	},
 	updateVirtualCode(_id, _oldVirtualCode, newSnapshot) {
-		return createSuperOfficeCode(newSnapshot, '');
+		return createSuperOfficeCode(newSnapshot);
 	},
 	typescript: {
 		extraFileExtensions: [{ extension: 'crmscript', isMixedContent: true, scriptKind: 7 satisfies ts.ScriptKind.Deferred }],
@@ -40,6 +40,7 @@ export const superofficeLanguagePlugin: LanguagePlugin = {
 	}
 };
 
+//TODO: Refactor into own file
 const _SCRIPT_START = '%EJSCRIPT_START%';
 //const _SCRIPT_END = '%EJSCRIPT_END%';
 const _SCRIPT_INCLUDE_START = '<%';
@@ -64,16 +65,14 @@ function blankOutNonScriptContent(text: string): string {
 	return result;
 }
 
-function createSuperOfficeCode(snapshot: ts.IScriptSnapshot, languageId: string): VirtualCode {
+function createSuperOfficeCode(snapshot: ts.IScriptSnapshot): VirtualCode {
 	const text = snapshot.getText(0, snapshot.getLength());
 
 	const ejscriptStart = text.indexOf(_SCRIPT_START);
 	// EJSCRIPT_START not found. It means we can skip this, since it's standard typescript content
 	if (ejscriptStart === -1) {
 		//console.log('EJSCRIPT_START not found. It means we can skip this, since it\'s a standard JavaScript file');
-
-		//const addCode = `import * as RTL from "${__dirname.replace(/\\/g, '/')}/cjs/WebApi"; \n`;
-		const addCode = `class Greeter {greeting: string;constructor(message: string) {this.greeting = message;}greet() {return "Hello, " + this.greeting;}} \n`;
+		const addCode = `import * as RTL from "@superoffice/webapi"; \n`;
 		const newText = addCode + text;
 
 		return {
@@ -101,9 +100,7 @@ function createSuperOfficeCode(snapshot: ts.IScriptSnapshot, languageId: string)
 		};
 	}
 
-	//const addCode: string = `import * as RTL from "${__dirname.replace(/\\/g, '/')}/cjs/WebApi"; \n`;
-	const addCode: string = '';
-	const newText = addCode + blankOutNonScriptContent(text);
+	const newText = blankOutNonScriptContent(text);
 
 	//TODO: create logic for the embedded languages. Also extract this logic into its own file..
 	return {
@@ -116,7 +113,7 @@ function createSuperOfficeCode(snapshot: ts.IScriptSnapshot, languageId: string)
 		},
 		mappings: [{
 			sourceOffsets: [0],
-			generatedOffsets: [addCode.length],
+			generatedOffsets: [newText.length],
 			lengths: [newText.length],
 			data: {
 				completion: true,

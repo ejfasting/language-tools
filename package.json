@@ -42,6 +42,7 @@
         "@superoffice/langium-crmscript": "link:packages\\langium-crmscript",
         "@superoffice/language-server": "link:packages\\language-server",
         "@superoffice/language-service": "link:packages\\language-service",
+        "@superoffice/webapi": "^10.3.4",
         "@volar/language-core": "^2.1.6",
         "@volar/language-server": "^2.1.6",
         "@volar/language-service": "^2.1.6",

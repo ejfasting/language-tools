@@ -1,22 +1,22 @@
 {
-    "name": "@superoffice/langium-crmscript",
-    "description": "Please enter a brief description here",
-    "version": "0.0.1",
-    "publisher": "SuperOffice",
+  "name": "@superoffice/langium-crmscript",
+  "description": "Please enter a brief description here",
+  "version": "0.0.1",
+  "publisher": "SuperOffice",
   "repository": {
     "type": "git",
     "url": "https://github.com/ejfasting/language-tools"
   },
-    "files": [
-        "out",
-        "src"
-    ],
-    "type": "module",
-    "scripts": {
-        "build": "tsc -b tsconfig.json",
-        "watch": "tsc -b tsconfig.json --watch",
-        "lint": "eslint src --ext ts",
-        "langium:generate": "langium generate",
-        "langium:watch": "langium generate --watch"
-    }
+  "files": [
+    "out",
+    "src"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b tsconfig.json",
+    "watch": "tsc -b tsconfig.json --watch",
+    "lint": "eslint src --ext ts",
+    "langium:generate": "langium generate",
+    "langium:watch": "langium generate --watch"
+  }
 }

@@ -25,8 +25,12 @@ self.onmessage = () => {
 		return createTypeScriptWorkerService({
 			typescript: ts,
 			compilerOptions: {
-				// ...
-			},
+                ...ts.getDefaultCompilerOptions(),
+                allowJs: true,
+                jsx: ts.JsxEmit.Preserve,
+                module: ts.ModuleKind.ESNext,
+                moduleResolution: ts.ModuleResolutionKind.NodeNext,
+            },
 			workerContext: ctx,
 			env,
 			languagePlugins: [
