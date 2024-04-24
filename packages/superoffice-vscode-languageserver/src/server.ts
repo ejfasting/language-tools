@@ -1,11 +1,11 @@
-import { crmscriptLanguagePlugin } from './languagePlugin.js';
+import { superofficeLanguagePlugin } from './superofficeLanguagePlugin.js';
 import { create as createEmmetService } from 'volar-service-emmet';
 import { create as createHtmlService } from 'volar-service-html';
 import { create as createCssService } from 'volar-service-css';
 import { create as createTypeScriptServices } from 'volar-service-typescript';
 import { createServer, createConnection, createTypeScriptProjectProviderFactory, loadTsdkByPath } from '@volar/language-server/node.js';
 
-import { create as createCrmscriptService } from "./crmscriptLanguageService.js";
+import { create as crmscriptLanguageService } from "./crmscriptLanguageService.js";
 
 const connection = createConnection();
 const server = createServer(connection);
@@ -19,7 +19,7 @@ connection.onInitialize(params => {
 		createTypeScriptProjectProviderFactory(tsdk.typescript, tsdk.diagnosticMessages),
 		{
 			getLanguagePlugins() {
-				return [crmscriptLanguagePlugin];
+				return [superofficeLanguagePlugin];
 			},
 			getServicePlugins() {
 				return [
@@ -27,7 +27,7 @@ connection.onInitialize(params => {
 					createCssService(),
 					createEmmetService(),
 					...createTypeScriptServices(tsdk.typescript, {}),
-					createCrmscriptService(),
+					crmscriptLanguageService(),
 				];
 			},
 		},

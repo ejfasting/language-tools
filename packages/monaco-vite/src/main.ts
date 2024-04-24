@@ -1,10 +1,9 @@
 import { Uri, editor } from 'monaco-editor';
-import { setupMonacoEnvcrmscript } from './crmscript/setup-crmscript';
+import { setupMonacoEnv } from './monaco-setup';
+import { INITIAL_CODE, fileExtension } from './constants';
 
-export const languageId: string = 'crmscript';
-export const fileExtension: string = '.crmscript';
 
-await setupMonacoEnvcrmscript();
+await setupMonacoEnv();
 
 // create div to avoid needing a HtmlWebpackPlugin template
 (function () {
@@ -21,6 +20,6 @@ await setupMonacoEnvcrmscript();
 const rootElement = document.getElementById('root');
 if (rootElement) {
 	const editorInstance = editor.create(rootElement);
-	editorInstance.setModel(editor.createModel('const foo = () => 0;', '', Uri.parse('file:///main.crmscript')));
+	editorInstance.setModel(editor.createModel(INITIAL_CODE, '', Uri.parse('file:///main' + fileExtension)));
 	document.body.appendChild(rootElement);
 }

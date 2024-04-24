@@ -26,7 +26,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 		},
 	};
 	const clientOptions: lsp.LanguageClientOptions = {
-		documentSelector: [{ language: 'crmscript' }],
+		documentSelector: [{ language: 'suo' }],
 		initializationOptions: {
 			typescript: {
 				tsdk: (await getTsdk(context)).tsdk,
@@ -34,8 +34,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 		},
 	};
 	client = new lsp.LanguageClient(
-		'crmscript-language-server',
-		'crmscript Language Server',
+		'suo-language-server',
+		'suo Language Server',
 		serverOptions,
 		clientOptions,
 	);

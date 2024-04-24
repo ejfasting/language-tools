@@ -2,14 +2,14 @@
 import { editor, languages } from 'monaco-editor';
 import editorWorker from 'monaco-editor-core/esm/vs/editor/editor.worker?worker';
 
-import crmscriptWorker from './crmscript-worker?worker';
-import {languageId, fileExtension} from '../main';
+import customWorker from './custom.worker?worker';
+import {languageId, fileExtension} from './constants';
 
 import * as vls from '@volar/language-service';
 import * as volar from '@volar/monaco';
-import { loadTheme } from '../themes';
+import { loadTheme } from './themes';
 
-export const setupMonacoEnvcrmscript = async () => {
+export const setupMonacoEnv = async () => {
   
   languages.register({ id: languageId, extensions: [fileExtension] });
 
@@ -17,13 +17,13 @@ export const setupMonacoEnvcrmscript = async () => {
 
   self.MonacoEnvironment.getWorker = (_: any, label: string) => {
     if (label === languageId) {
-      return new crmscriptWorker();
+      return new customWorker();
     }
     return new editorWorker();
   };
 
   const worker = editor.createWebWorker<vls.LanguageService>({
-    moduleId: 'vs/language/crmscript/crmscriptWorker',
+    moduleId: 'vs/language/' + languageId + '/' + languageId  + 'Worker',
     label: languageId,
     createData: {}
   });

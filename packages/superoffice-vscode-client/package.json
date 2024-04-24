@@ -14,21 +14,21 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": ["onLanguage:crmscript"],
+  "activationEvents": ["onLanguage:suo"],
   "main": "./dist/client.js",
   "contributes": {
     "languages": [
       {
-        "id": "crmscript",
+        "id": "suo",
         "extensions": [
-          ".crmscript"
+          ".suo"
         ]
       }
     ],
     "grammars": [
       {
-        "language": "crmscript",
-        "scopeName": "text.crmscript.basic",
+        "language": "suo",
+        "scopeName": "text.suo.basic",
         "path": "./syntaxes/crmscript.tmLanguage.json",
         "embeddedLanguages": {
           "meta.embedded.block.javascript": "javascript",
