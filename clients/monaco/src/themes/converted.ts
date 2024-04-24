@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import type * as monaco from 'monaco-editor-core';
 
 export const theme: monaco.editor.IStandaloneThemeData = {

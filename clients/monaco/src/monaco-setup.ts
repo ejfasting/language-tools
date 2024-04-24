@@ -1,21 +1,22 @@
 
 import { editor, languages } from 'monaco-editor';
-import editorWorker from 'monaco-editor-core/esm/vs/editor/editor.worker?worker';
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 
 import customWorker from './custom.worker?worker';
-import {languageId, fileExtension} from './constants';
+import {languageId, fileExtension} from './constants.ts';
 
 import * as vls from '@volar/language-service';
 import * as volar from '@volar/monaco';
-import { loadTheme } from './themes';
+import { loadTheme } from './themes/index.ts';
 
-export const setupMonacoEnv = async () => {
+export const setupMonacoEnv = async (): Promise<void> => {
   
   languages.register({ id: languageId, extensions: [fileExtension] }); 
- 
+
+
   self.MonacoEnvironment ??= {};
 
-  self.MonacoEnvironment.getWorker = (_: any, label: string) => {
+  self.MonacoEnvironment.getWorker = (_: unknown, label: string) => {
     if (label === languageId) {
       return new customWorker();
     }
@@ -28,8 +29,9 @@ export const setupMonacoEnv = async () => {
     createData: {}
   });
 
-  const theme = loadTheme(editor);
-  editor.setTheme((await theme).dark);
+
+   const theme = await loadTheme(editor);
+   editor.setTheme(theme.dark);
 
   // worker
   const languageIds = [languageId];

@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as serverProtocol from '@volar/language-server/protocol';
-import { createLabsInfo, getTsdk } from '@volar/vscode';
+import { LabsInfo, createLabsInfo, getTsdk } from '@volar/vscode';
 import * as vscode from 'vscode';
 import * as lsp from 'vscode-languageclient/node';
 
@@ -9,7 +9,7 @@ let client: lsp.BaseLanguageClient;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export async function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext): Promise<LabsInfo> {
 
 	const serverModule = vscode.Uri.joinPath(context.extensionUri, 'dist', 'server.js');
 	const runOptions = { execArgv: <string[]>[] };

@@ -1,6 +1,6 @@
 import { Uri, editor } from 'monaco-editor';
-import { setupMonacoEnv } from './monaco-setup';
-import { INITIAL_CODE, fileExtension } from './constants';
+import { setupMonacoEnv } from './monaco-setup.ts';
+import { INITIAL_CODE, fileExtension } from './constants.ts';
 
 
 await setupMonacoEnv();
