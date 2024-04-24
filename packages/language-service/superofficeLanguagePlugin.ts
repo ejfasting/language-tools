@@ -1,5 +1,5 @@
 import { ExtraServiceScript, forEachEmbeddedCode, type LanguagePlugin } from '@volar/language-core';
-import { createSuperOfficeCode } from './documentScanner.js';
+import { createSuperOfficeCode } from './documentScanner.ts';
 import type * as ts from 'typescript';
 
 export const superofficeLanguagePlugin: LanguagePlugin = {

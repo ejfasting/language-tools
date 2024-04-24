@@ -1,6 +1,6 @@
 import { DocumentSelector, ServicePlugin, ServicePluginInstance } from '@volar/language-server';
 
-import { createCrmscriptServices } from '@superoffice/langium-crmscript/src/language/crmscript-module.js';
+import { createCrmscriptServices } from '@superoffice/langium-crmscript/src/language/crmscript-module.ts';
 import { NodeFileSystem } from 'langium/node';
 
 const { shared, Crmscript } = createCrmscriptServices({ ...NodeFileSystem });
