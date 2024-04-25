@@ -9,8 +9,7 @@
             "request": "launch",
             "args": [
                 "--extensionDevelopmentPath=${workspaceFolder}/clients/vscode/",
-                "--folder-uri=${workspaceRoot}/test",
-                "--disable-extensions"
+                "--folder-uri=${workspaceRoot}/test"
             ],
             "outFiles": [
                 "${workspaceFolder}/clients/vscode/dist/**/*.js"
