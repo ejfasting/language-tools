@@ -8,11 +8,11 @@
             "debugWebWorkerHost": true,
             "request": "launch",
             "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}/clients/vscode/",
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode/",
                 "--folder-uri=${workspaceRoot}/test"
             ],
             "outFiles": [
-                "${workspaceFolder}/clients/vscode/dist/**/*.js"
+                "${workspaceFolder}/packages/vscode/dist/**/*.js"
             ],
             "preLaunchTask": "npm: build:vscode"
         }

@@ -1,17 +1,30 @@
 
-import { editor, languages } from 'monaco-editor';
+import { editor, languages, Uri } from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 
 import customWorker from './custom.worker?worker';
-import {languageId, fileExtension} from './constants.ts';
+import {languageId, fileExtension} from './constants.js';
 
 import * as vls from '@volar/language-service';
 import * as volar from '@volar/monaco';
-import { loadTheme } from './themes/index.ts';
+import { loadTheme } from './themes/index.js';
 
 export const setupMonacoEnv = async (): Promise<void> => {
   
   languages.register({ id: languageId, extensions: [fileExtension] }); 
+
+
+  // 
+  // languages.typescript.javascriptDefaults.addExtraLib(api.default, modelUri);
+  // editor.createModel(api.default, "javascript", Uri.parse(modelUri));
+
+  const modelUri = "ts:/node_modules/@types/superoffice/index.d.ts";
+  Promise.all([
+    fetch('https://www.unpkg.com/@superoffice/webapi@10.3.4/dist/cjs/WebApi.ts').then((res) => res.text())
+]).then(([typings]) => {
+    languages.typescript.typescriptDefaults.addExtraLib(typings, modelUri);
+    editor.createModel(typings, 'typescript', Uri.parse(modelUri));
+});
 
 
   self.MonacoEnvironment ??= {};

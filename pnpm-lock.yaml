@@ -29,6 +29,9 @@ dependencies:
   '@volar/monaco':
     specifier: ^2.1.6
     version: 2.1.6
+  '@volar/typescript':
+    specifier: ^2.1.6
+    version: 2.1.6
   langium:
     specifier: ^3.0.0
     version: 3.0.0
@@ -38,6 +41,9 @@ dependencies:
   monaco-editor-core:
     specifier: ^0.47.0
     version: 0.47.0
+  ts-plugin:
+    specifier: link:packages\ts-plugin
+    version: link:packages/ts-plugin
   volar-service-css:
     specifier: ^0.0.34
     version: 0.0.34(@volar/language-service@2.1.6)
@@ -1114,7 +1120,7 @@ packages:
     requiresBuild: true
     dependencies:
       bare-events: 2.2.2
-      bare-path: 2.1.1
+      bare-path: 2.1.2
       bare-stream: 1.0.0
     dev: true
     optional: true
@@ -1125,8 +1131,8 @@ packages:
     dev: true
     optional: true
 
-  /bare-path@2.1.1:
-    resolution: {integrity: sha512-OHM+iwRDRMDBsSW7kl3dO62JyHdBKO3B25FB9vNQBPcGHMo4+eA8Yj41Lfbk3pS/seDY+siNge0LdRTulAau/A==}
+  /bare-path@2.1.2:
+    resolution: {integrity: sha512-o7KSt4prEphWUHa3QUwCxUI00R86VdjiuxmJK0iNVDHYPGo+HsDaVCnqCmPbf/MiW1ok8F4p3m8RTHlWk8K2ig==}
     requiresBuild: true
     dependencies:
       bare-os: 2.3.0
@@ -3225,7 +3231,7 @@ packages:
       tar-stream: 3.1.7
     optionalDependencies:
       bare-fs: 2.3.0
-      bare-path: 2.1.1
+      bare-path: 2.1.2
     dev: true
 
   /tar-stream@2.2.0:

@@ -3,11 +3,11 @@ import type * as monaco from 'monaco-editor-core';
 import {
     createTypeScriptWorkerService,
     ServiceEnvironment
-} from '@volar/monaco/worker';
+} from '@volar/monaco/worker.js';
 
 
-import { create as crmscriptLanguageService } from "@superoffice/language-service/crmscriptLanguageService";
-import { superofficeLanguagePlugin } from "@superoffice/language-service/superofficeLanguagePlugin";
+import { create as crmscriptLanguageService } from "@superoffice/language-service/crmscriptLanguageService.js";
+import { superofficeLanguagePlugin } from "@superoffice/language-service/superofficeLanguagePlugin.js";
 
 import ts from 'typescript';
 import { create as createTypeScriptService } from 'volar-service-typescript';

@@ -16,12 +16,12 @@
     },
     "scripts": {
         "preinstall": "npx only-allow pnpm",
-        "createLinks": "pnpm link ./packages/language-service && pnpm link ./packages/language-server && pnpm link ./packages/llangium-crmscript",
+        "createLinks": "pnpm link ./packages/ts-plugin && pnpm link ./packages/language-server && pnpm link ./packages/langium-crmscript",
         "vscode:prepublish": "npm run build:prod",
-        "build:prod": "npm run build:prod --prefix ./clients/vscode",
-        "build:vscode": "npm run build --prefix ./clients/vscode",
+        "build:prod": "npm run build:prod --prefix ./packages/vscode",
+        "build:vscode": "npm run build --prefix ./packages/vscode",
         "build:langium": "npm run langium:generate --prefix ./packages/langium-crmscript/",
-        "monaco": "npm run dev --prefix ./clients/monaco/"
+        "monaco": "npm run dev --prefix ./packages/monaco/"
     },
     "devDependencies": {
         "@types/node": "^20.12.7",
@@ -47,9 +47,11 @@
         "@volar/language-server": "^2.1.6",
         "@volar/language-service": "^2.1.6",
         "@volar/monaco": "^2.1.6",
+        "@volar/typescript": "^2.1.6",
         "langium": "^3.0.0",
         "monaco-editor": "^0.47.0",
         "monaco-editor-core": "^0.47.0",
+        "ts-plugin": "link:packages\\ts-plugin",
         "volar-service-css": "^0.0.34",
         "volar-service-emmet": "^0.0.34",
         "volar-service-html": "^0.0.34",

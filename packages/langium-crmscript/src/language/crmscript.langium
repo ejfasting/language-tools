@@ -3,6 +3,8 @@ grammar Crmscript
 entry Model:
     (persons+=Person | greetings+=Greeting)*;
 
+StringExpression: value=STRING;
+
 Person:
     'person' name=ID;
 

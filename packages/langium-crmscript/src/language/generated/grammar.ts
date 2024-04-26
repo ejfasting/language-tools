@@ -26,7 +26,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@1"
+                "$ref": "#/rules@2"
               },
               "arguments": []
             }
@@ -38,7 +38,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@2"
+                "$ref": "#/rules@3"
               },
               "arguments": []
             }
@@ -47,6 +47,28 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
         "cardinality": "*"
       },
       "definesHiddenTokens": false,
+      "fragment": false,
+      "hiddenTokens": [],
+      "parameters": [],
+      "wildcard": false
+    },
+    {
+      "$type": "ParserRule",
+      "name": "StringExpression",
+      "definition": {
+        "$type": "Assignment",
+        "feature": "value",
+        "operator": "=",
+        "terminal": {
+          "$type": "RuleCall",
+          "rule": {
+            "$ref": "#/rules@7"
+          },
+          "arguments": []
+        }
+      },
+      "definesHiddenTokens": false,
+      "entry": false,
       "fragment": false,
       "hiddenTokens": [],
       "parameters": [],
@@ -69,7 +91,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@4"
+                "$ref": "#/rules@5"
               },
               "arguments": []
             }
@@ -100,12 +122,12 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
             "terminal": {
               "$type": "CrossReference",
               "type": {
-                "$ref": "#/rules@1"
+                "$ref": "#/rules@2"
               },
               "terminal": {
                 "$type": "RuleCall",
                 "rule": {
-                  "$ref": "#/rules@4"
+                  "$ref": "#/rules@5"
                 },
                 "arguments": []
               },

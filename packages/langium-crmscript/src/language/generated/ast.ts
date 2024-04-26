@@ -50,16 +50,28 @@ export function isPerson(item: unknown): item is Person {
     return reflection.isInstance(item, Person);
 }
 
+export interface StringExpression extends AstNode {
+    readonly $type: 'StringExpression';
+    value: string;
+}
+
+export const StringExpression = 'StringExpression';
+
+export function isStringExpression(item: unknown): item is StringExpression {
+    return reflection.isInstance(item, StringExpression);
+}
+
 export type CrmscriptAstType = {
     Greeting: Greeting
     Model: Model
     Person: Person
+    StringExpression: StringExpression
 }
 
 export class CrmscriptAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return ['Greeting', 'Model', 'Person'];
+        return ['Greeting', 'Model', 'Person', 'StringExpression'];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -106,6 +118,14 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     name: 'Person',
                     properties: [
                         { name: 'name' }
+                    ]
+                };
+            }
+            case 'StringExpression': {
+                return {
+                    name: 'StringExpression',
+                    properties: [
+                        { name: 'value' }
                     ]
                 };
             }
