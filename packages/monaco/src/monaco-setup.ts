@@ -15,11 +15,15 @@ export const setupMonacoEnv = async (): Promise<void> => {
 
   /*Top-level 'await' expressions are only allowed when the 'module' option is set to 'es2022', 'esnext', 'system', 'node16', 
   'nodenext', or 'preserve', and the 'target' option is set to 'es2017' or higher.ts(1378) */
-  languages.typescript.javascriptDefaults.setCompilerOptions({
-    target: languages.typescript.ScriptTarget.ES2017,
-    module: languages.typescript.ModuleKind.ESNext,
-    allowNonTsExtensions: true
-});
+  languages.typescript.typescriptDefaults.setCompilerOptions({
+      target: languages.typescript.ScriptTarget.ES2017,
+      module: languages.typescript.ModuleKind.ESNext,
+      allowNonTsExtensions: true
+  });
+
+  languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+    diagnosticCodesToIgnore: [1378]
+  });
 
   self.MonacoEnvironment ??= {};
 
