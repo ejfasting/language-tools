@@ -1,9 +1,10 @@
 %EJSCRIPT_START%
 <HTML>
-<% [customCode] %>
+<style></style>
 <div>
-<% [customCode] %>
+<% 
+const temp = "123";
+ %>
 </div>
-<script>[JAVASCRIPT]</script>
 </HTML>
 %EJSCRIPT_END%

@@ -1,5 +1,5 @@
 
-import { editor, languages, Uri } from 'monaco-editor';
+import { editor, languages } from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 
 import customWorker from './custom.worker?worker';
@@ -13,19 +13,13 @@ export const setupMonacoEnv = async (): Promise<void> => {
   
   languages.register({ id: languageId, extensions: [fileExtension] }); 
 
-
-  // 
-  // languages.typescript.javascriptDefaults.addExtraLib(api.default, modelUri);
-  // editor.createModel(api.default, "javascript", Uri.parse(modelUri));
-
-  const modelUri = "ts:/node_modules/@types/superoffice/index.d.ts";
-  Promise.all([
-    fetch('https://www.unpkg.com/@superoffice/webapi@10.3.4/dist/cjs/WebApi.ts').then((res) => res.text())
-]).then(([typings]) => {
-    languages.typescript.typescriptDefaults.addExtraLib(typings, modelUri);
-    editor.createModel(typings, 'typescript', Uri.parse(modelUri));
+  /*Top-level 'await' expressions are only allowed when the 'module' option is set to 'es2022', 'esnext', 'system', 'node16', 
+  'nodenext', or 'preserve', and the 'target' option is set to 'es2017' or higher.ts(1378) */
+  languages.typescript.javascriptDefaults.setCompilerOptions({
+    target: languages.typescript.ScriptTarget.ES2017,
+    module: languages.typescript.ModuleKind.ESNext,
+    allowNonTsExtensions: true
 });
-
 
   self.MonacoEnvironment ??= {};
 

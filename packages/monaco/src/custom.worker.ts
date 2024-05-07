@@ -1,13 +1,14 @@
 import * as worker from 'monaco-editor/esm/vs/editor/editor.worker';
-import type * as monaco from 'monaco-editor-core';
+import type * as monaco from 'monaco-editor';
 import {
     createTypeScriptWorkerService,
-    ServiceEnvironment
+    ServiceEnvironment,
+	activateAutomaticTypeAcquisition,
 } from '@volar/monaco/worker.js';
 
 
-import { create as crmscriptLanguageService } from "@superoffice/language-service/crmscriptLanguageService.js";
-import { superofficeLanguagePlugin } from "@superoffice/language-service/superofficeLanguagePlugin.js";
+import { service as crmscriptLanguageService } from "@superoffice/language-service/crmscriptLanguageService.js";
+import { suoLanguagePlugin } from "@superoffice/language-service/suoLanguagePlugin.js";
 
 import ts from 'typescript';
 import { create as createTypeScriptService } from 'volar-service-typescript';
@@ -22,6 +23,7 @@ self.onmessage = () => {
 			},
 		};
 
+		activateAutomaticTypeAcquisition(env);
 		return createTypeScriptWorkerService({
 			typescript: ts,
 			compilerOptions: {
@@ -34,12 +36,12 @@ self.onmessage = () => {
 			workerContext: ctx,
 			env,
 			languagePlugins: [
-				superofficeLanguagePlugin
+				suoLanguagePlugin
 			],
 			servicePlugins: [
 				// ...
 				...createTypeScriptService(ts),
-				crmscriptLanguageService()
+				crmscriptLanguageService
 			],
 		});
 	});
