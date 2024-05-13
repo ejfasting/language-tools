@@ -1,0 +1,5 @@
+Integer myInt = "123";
+Integer myInt2 = 123;
+
+String myString = 123;
+String myString2 = "123";

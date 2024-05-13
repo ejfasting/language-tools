@@ -1,0 +1,15 @@
+%EJSCRIPT_START%
+<style>.foo { c }</style>
+<% adsad %>
+<div></div>
+<% 
+const temp = "123";
+
+ %>
+<div></div>
+<% bla %>
+<script> 
+let foo: string = 123; 
+</script>
+</HTML>
+%EJSCRIPT_END%

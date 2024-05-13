@@ -33,7 +33,8 @@
         "vscode-languageclient": "^9.0.1",
         "vite": "^5.2.10",
         "esbuild": "^0.20.2",
-        "eslint": "^8.57.0"
+        "eslint": "^8.57.0",
+        "langium": "^3.0.0"
     },
     "dependencies": {
         "@volar/typescript": "~2.2.0",
@@ -47,10 +48,9 @@
         "volar-service-typescript": "volar-2.2",
         "monaco-editor": "^0.47.0",
         "vscode-html-languageservice": "^5.2.0",
-        "langium": "^3.0.0",
         "@superoffice/webapi": "^10.3.4",
         "@superoffice/langium-crmscript": "link:packages\\langium-crmscript",
         "@superoffice/language-server": "link:packages\\language-server",
-        "@superoffice/language-service": "link:packages\\language-service"
+        "langium-cli": "~3.0.0"
     }
 }

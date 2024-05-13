@@ -10,7 +10,7 @@
     },
     {
       "name": "keyword.control.crmscript",
-      "match": "\\b(Hello|person)\\b"
+      "match": "\\b(Integer|String|for|to)\\b"
     },
     {
       "name": "string.quoted.double.crmscript",

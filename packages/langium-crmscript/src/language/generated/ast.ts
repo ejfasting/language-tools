@@ -10,26 +10,114 @@ import { AbstractAstReflection } from 'langium';
 export const CrmscriptTerminals = {
     WS: /\s+/,
     ID: /[_a-zA-Z][\w_]*/,
+    INT: /[0-9]+/,
+    STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/,
     ML_COMMENT: /\/\*[\s\S]*?\*\//,
     SL_COMMENT: /\/\/[^\n\r]*/,
 };
 
-export interface Greeting extends AstNode {
-    readonly $container: Model;
-    readonly $type: 'Greeting';
-    person: Reference<Person>;
+export type Cmd = For;
+
+export const Cmd = 'Cmd';
+
+export function isCmd(item: unknown): item is Cmd {
+    return reflection.isInstance(item, Cmd);
 }
 
-export const Greeting = 'Greeting';
+export type Expr = BinExpr | PrimExpr;
 
-export function isGreeting(item: unknown): item is Greeting {
-    return reflection.isInstance(item, Greeting);
+export const Expr = 'Expr';
+
+export function isExpr(item: unknown): item is Expr {
+    return reflection.isInstance(item, Expr);
+}
+
+export type PrimExpr = Group | Lit | NegExpr | Ref;
+
+export const PrimExpr = 'PrimExpr';
+
+export function isPrimExpr(item: unknown): item is PrimExpr {
+    return reflection.isInstance(item, PrimExpr);
+}
+
+export type Stmt = Cmd;
+
+export const Stmt = 'Stmt';
+
+export function isStmt(item: unknown): item is Stmt {
+    return reflection.isInstance(item, Stmt);
+}
+
+export interface BinExpr extends AstNode {
+    readonly $container: BinExpr | For | Group | NegExpr;
+    readonly $type: 'BinExpr';
+    e1: Expr | PrimExpr;
+    e2: Expr | PrimExpr;
+    op: '*' | '+' | '-' | '/';
+}
+
+export const BinExpr = 'BinExpr';
+
+export function isBinExpr(item: unknown): item is BinExpr {
+    return reflection.isInstance(item, BinExpr);
+}
+
+export interface Def extends AstNode {
+    readonly $container: Model;
+    readonly $type: 'Def';
+    name: string;
+    value: number | string;
+}
+
+export const Def = 'Def';
+
+export function isDef(item: unknown): item is Def {
+    return reflection.isInstance(item, Def);
+}
+
+export interface For extends AstNode {
+    readonly $container: For | Model;
+    readonly $type: 'For';
+    body: Array<Stmt>;
+    e1: Expr;
+    e2: Expr;
+    var: Param;
+}
+
+export const For = 'For';
+
+export function isFor(item: unknown): item is For {
+    return reflection.isInstance(item, For);
+}
+
+export interface Group extends AstNode {
+    readonly $container: BinExpr | For | Group | NegExpr;
+    readonly $type: 'Group';
+    ge: Expr;
+}
+
+export const Group = 'Group';
+
+export function isGroup(item: unknown): item is Group {
+    return reflection.isInstance(item, Group);
+}
+
+export interface Lit extends AstNode {
+    readonly $container: BinExpr | For | Group | NegExpr;
+    readonly $type: 'Lit';
+    val: number;
+}
+
+export const Lit = 'Lit';
+
+export function isLit(item: unknown): item is Lit {
+    return reflection.isInstance(item, Lit);
 }
 
 export interface Model extends AstNode {
     readonly $type: 'Model';
-    greetings: Array<Greeting>;
-    persons: Array<Person>;
+    defs: Array<Def>;
+    stmts: Array<Stmt>;
 }
 
 export const Model = 'Model';
@@ -38,44 +126,82 @@ export function isModel(item: unknown): item is Model {
     return reflection.isInstance(item, Model);
 }
 
-export interface Person extends AstNode {
-    readonly $container: Model;
-    readonly $type: 'Person';
+export interface NegExpr extends AstNode {
+    readonly $container: BinExpr | For | Group | NegExpr;
+    readonly $type: 'NegExpr';
+    ne: Expr;
+}
+
+export const NegExpr = 'NegExpr';
+
+export function isNegExpr(item: unknown): item is NegExpr {
+    return reflection.isInstance(item, NegExpr);
+}
+
+export interface Param extends AstNode {
+    readonly $container: For;
+    readonly $type: 'Param';
     name: string;
 }
 
-export const Person = 'Person';
+export const Param = 'Param';
 
-export function isPerson(item: unknown): item is Person {
-    return reflection.isInstance(item, Person);
+export function isParam(item: unknown): item is Param {
+    return reflection.isInstance(item, Param);
 }
 
-export interface StringExpression extends AstNode {
-    readonly $type: 'StringExpression';
-    value: string;
+export interface Ref extends AstNode {
+    readonly $container: BinExpr | For | Group | NegExpr;
+    readonly $type: 'Ref';
+    val: Reference<Param>;
 }
 
-export const StringExpression = 'StringExpression';
+export const Ref = 'Ref';
 
-export function isStringExpression(item: unknown): item is StringExpression {
-    return reflection.isInstance(item, StringExpression);
+export function isRef(item: unknown): item is Ref {
+    return reflection.isInstance(item, Ref);
 }
 
 export type CrmscriptAstType = {
-    Greeting: Greeting
+    BinExpr: BinExpr
+    Cmd: Cmd
+    Def: Def
+    Expr: Expr
+    For: For
+    Group: Group
+    Lit: Lit
     Model: Model
-    Person: Person
-    StringExpression: StringExpression
+    NegExpr: NegExpr
+    Param: Param
+    PrimExpr: PrimExpr
+    Ref: Ref
+    Stmt: Stmt
 }
 
 export class CrmscriptAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return ['Greeting', 'Model', 'Person', 'StringExpression'];
+        return ['BinExpr', 'Cmd', 'Def', 'Expr', 'For', 'Group', 'Lit', 'Model', 'NegExpr', 'Param', 'PrimExpr', 'Ref', 'Stmt'];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
         switch (subtype) {
+            case BinExpr:
+            case PrimExpr: {
+                return this.isSubtype(Expr, supertype);
+            }
+            case Cmd: {
+                return this.isSubtype(Stmt, supertype);
+            }
+            case For: {
+                return this.isSubtype(Cmd, supertype);
+            }
+            case Group:
+            case Lit:
+            case NegExpr:
+            case Ref: {
+                return this.isSubtype(PrimExpr, supertype);
+            }
             default: {
                 return false;
             }
@@ -85,8 +211,8 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
     getReferenceType(refInfo: ReferenceInfo): string {
         const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
-            case 'Greeting:person': {
-                return Person;
+            case 'Ref:val': {
+                return Param;
             }
             default: {
                 throw new Error(`${referenceId} is not a valid reference id.`);
@@ -96,11 +222,49 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
 
     getTypeMetaData(type: string): TypeMetaData {
         switch (type) {
-            case 'Greeting': {
+            case 'BinExpr': {
                 return {
-                    name: 'Greeting',
+                    name: 'BinExpr',
                     properties: [
-                        { name: 'person' }
+                        { name: 'e1' },
+                        { name: 'e2' },
+                        { name: 'op' }
+                    ]
+                };
+            }
+            case 'Def': {
+                return {
+                    name: 'Def',
+                    properties: [
+                        { name: 'name' },
+                        { name: 'value' }
+                    ]
+                };
+            }
+            case 'For': {
+                return {
+                    name: 'For',
+                    properties: [
+                        { name: 'body', defaultValue: [] },
+                        { name: 'e1' },
+                        { name: 'e2' },
+                        { name: 'var' }
+                    ]
+                };
+            }
+            case 'Group': {
+                return {
+                    name: 'Group',
+                    properties: [
+                        { name: 'ge' }
+                    ]
+                };
+            }
+            case 'Lit': {
+                return {
+                    name: 'Lit',
+                    properties: [
+                        { name: 'val' }
                     ]
                 };
             }
@@ -108,24 +272,32 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                 return {
                     name: 'Model',
                     properties: [
-                        { name: 'greetings', defaultValue: [] },
-                        { name: 'persons', defaultValue: [] }
+                        { name: 'defs', defaultValue: [] },
+                        { name: 'stmts', defaultValue: [] }
                     ]
                 };
             }
-            case 'Person': {
+            case 'NegExpr': {
                 return {
-                    name: 'Person',
+                    name: 'NegExpr',
+                    properties: [
+                        { name: 'ne' }
+                    ]
+                };
+            }
+            case 'Param': {
+                return {
+                    name: 'Param',
                     properties: [
                         { name: 'name' }
                     ]
                 };
             }
-            case 'StringExpression': {
+            case 'Ref': {
                 return {
-                    name: 'StringExpression',
+                    name: 'Ref',
                     properties: [
-                        { name: 'value' }
+                        { name: 'val' }
                     ]
                 };
             }

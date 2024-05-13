@@ -4,8 +4,8 @@ import { create as createCssService } from 'volar-service-css';
 import { create as createTypeScriptServices } from 'volar-service-typescript';
 import { createServer, createConnection, createTypeScriptProjectProvider, loadTsdkByPath } from '@volar/language-server/node.js';
 
-import { service as crmscriptLanguageService } from "@superoffice/language-service/crmscriptLanguageService.js";
-import { suoLanguagePlugin } from '@superoffice/language-service/suoLanguagePlugin.js';
+import { create as createCrmscriptService } from './plugins/crmscript.js';
+import { getSuperOfficeLanguageModule } from './core/superoffice.js';
 
 const connection = createConnection();
 const server = createServer(connection);
@@ -21,9 +21,9 @@ connection.onInitialize(params => {
 			createCssService(),
 			createEmmetService({}),
 			...createTypeScriptServices(tsdk.typescript, {}),
-			crmscriptLanguageService,
+			createCrmscriptService(),
 		],
-		createTypeScriptProjectProvider(tsdk.typescript, tsdk.diagnosticMessages, () => [suoLanguagePlugin]),
+		createTypeScriptProjectProvider(tsdk.typescript, tsdk.diagnosticMessages, () => [getSuperOfficeLanguageModule()]),
 	);
 });
 

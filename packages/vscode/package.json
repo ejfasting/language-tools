@@ -34,7 +34,12 @@
           "meta.embedded.block.javascript": "javascript",
           "meta.embedded.block.typescript": "typescript"
         }
-      }
+      },
+      {
+        "language": "crmscript",
+        "scopeName": "source.crmscript",
+        "path": "../langium-crmscript/syntaxes/crmscript.tmLanguage.json"
+    }
     ],
     "commands": [
       {

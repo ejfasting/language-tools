@@ -1,7 +1,7 @@
 require('esbuild').context({
 	entryPoints: {
 		client: './src/extension.ts',
-		server: '../../packages/language-server/server.ts',
+		server: '../../packages/language-server/src/server.ts',
 	},
 	sourcemap: true,
 	bundle: true,

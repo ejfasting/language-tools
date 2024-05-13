@@ -1,5 +1,5 @@
 import type { ValidationAcceptor, ValidationChecks } from 'langium';
-import type { CrmscriptAstType, Person } from './generated/ast.js';
+import type { CrmscriptAstType, Model } from './generated/ast.js';
 import type { CrmscriptServices } from './crmscript-module.js';
 
 /**
@@ -9,7 +9,7 @@ export function registerValidationChecks(services: CrmscriptServices) {
     const registry = services.validation.ValidationRegistry;
     const validator = services.validation.CrmscriptValidator;
     const checks: ValidationChecks<CrmscriptAstType> = {
-        Person: validator.checkPersonStartsWithCapital
+        Model: validator.checkModel,
     };
     registry.register(checks, validator);
 }
@@ -19,11 +19,14 @@ export function registerValidationChecks(services: CrmscriptServices) {
  */
 export class CrmscriptValidator {
 
-    checkPersonStartsWithCapital(person: Person, accept: ValidationAcceptor): void {
-        if (person.name) {
-            const firstChar = person.name.substring(0, 1);
-            if (firstChar.toUpperCase() !== firstChar) {
-                accept('warning', 'Person name should start with a capital.', { node: person, property: 'name' });
+    checkModel(model: Model, accept: ValidationAcceptor): void {
+        const defs = model.defs;
+        const previousNames = new Set<string>();
+        for (const def of defs) {
+            if (previousNames.has(def.name)) {
+                accept('error', `Duplicate name '${def.name}'`, { node: def, property: 'name' });
+            } else {
+                previousNames.add(def.name);
             }
         }
     }

@@ -7,8 +7,11 @@ import {
 } from '@volar/monaco/worker.js';
 
 
-import { service as crmscriptLanguageService } from "@superoffice/language-service/crmscriptLanguageService.js";
-import { suoLanguagePlugin } from "@superoffice/language-service/suoLanguagePlugin.js";
+// import { service as crmscriptLanguageService } from "@superoffice/language-service/crmscriptLanguageService.js";
+// import { suoLanguagePlugin } from "@superoffice/language-service/suoLanguagePlugin.js";
+
+import { create as createCrmscriptService } from '@superoffice/language-server/src/plugins/crmscript.js';
+import { getSuperOfficeLanguageModule } from '@superoffice/language-server/src/core/superoffice.js';
 
 import ts from 'typescript';
 import { create as createTypeScriptService } from 'volar-service-typescript';
@@ -36,12 +39,12 @@ self.onmessage = () => {
 			workerContext: ctx,
 			env,
 			languagePlugins: [
-				suoLanguagePlugin
+				getSuperOfficeLanguageModule()
 			],
 			servicePlugins: [
 				// ...
 				...createTypeScriptService(ts),
-				crmscriptLanguageService
+				createCrmscriptService(),
 			],
 		});
 	});
