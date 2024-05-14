@@ -2,9 +2,11 @@
 
 This repository contains all the editor tooling required for working with Javascript for SuperOffice (`.jsfso` files) and CRMScript (`.crmscript` files) .
 
-It contains an implementation of the [Language Server Protocol (LSP)](https://microsoft.github.io/language-server-protocol/).
+It contains an implementation of the [Language Server Protocol (LSP)](https://microsoft.github.io/language-server-protocol/) and is currently under development.
 
 ## Packages
+
+This repository is a monorepo managed through [pnpm](https://pnpm.io/), which means that all packages share a node_modules on root.
 
 ### [`@superoffice/language-server`](packages/language-server)
 
@@ -18,7 +20,6 @@ The SuperOffice language server, powered by [Volar](https://volarjs.dev/).
 - [ ] Includes
 - [ ] Syntax highlighting
 - [ ] Semantic tokens
-
 
 ### [`@superoffice/langium-crmscript`](packages/langium-crmscript)
 
@@ -35,7 +36,6 @@ Implementation for the Monaco Editor using the [`@superoffice/language-server`](
 ## Getting Started
 
 - pnpm i
-- pnpm run build
 - Run&debug -> Launch client
 
 ### Additional scripts
