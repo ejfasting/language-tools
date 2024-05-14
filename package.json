@@ -34,7 +34,9 @@
         "vite": "^5.2.10",
         "esbuild": "^0.20.2",
         "eslint": "^8.57.0",
-        "langium": "^3.0.0"
+        "langium": "^3.0.0",
+        "uuid": "^9.0.1",
+        "@types/uuid": "^9.0.8"
     },
     "dependencies": {
         "@volar/typescript": "~2.2.0",
@@ -51,6 +53,7 @@
         "@superoffice/webapi": "^10.3.4",
         "@superoffice/langium-crmscript": "link:packages\\langium-crmscript",
         "@superoffice/language-server": "link:packages\\language-server",
-        "langium-cli": "~3.0.0"
+        "langium-cli": "~3.0.0",
+        "openid-client": "^5.6.5"
     }
 }

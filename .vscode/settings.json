@@ -8,6 +8,7 @@
         "languageservice",
         "preinstall",
         "superoffice",
+        "treeview",
         "webapi"
     ]
 }

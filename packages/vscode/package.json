@@ -45,6 +45,36 @@
         "path": "./syntaxes/crmscript.tmLanguage.json"
       }
     ],
+    "commands": [
+      {
+        "command": "@superoffice/vscode.signIn",
+        "title": "Sign In",
+        "icon": "$(log-in)",
+        "category": "SuperOffice"
+      },
+      {
+        "command": "@superoffice/vscode.showScriptInfo",
+        "title": "ShowScriptInfo"
+      },
+      {
+        "command": "@superoffice/vscode.previewScript",
+        "title": "PreviewScript"
+      },
+      {
+        "command": "@superoffice/vscode.downloadScript",
+        "title": "DownloadScript"
+      },
+      {
+        "command": "@superoffice/vscode.downloadScriptFolder",
+        "title": "DownloadScriptFolder"
+      },
+      {
+        "command": "@superoffice/vscode.executeScript",
+        "title": "ExecuteScript",
+        "category": "SuperOffice",
+        "enablement": "resourceScheme == file"
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
@@ -70,29 +100,67 @@
     "viewsWelcome": [
       {
         "view": "superoffice.views.treeview",
-        "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:superoffice-vscode.signIn)"
+        "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:@superoffice/vscode.signIn)"
+      }
+    ],
+    "menus": {
+      "view/title": [],
+      "view/item/context": [
+        {
+          "command": "@superoffice/vscode.previewScript",
+          "group": "0_script",
+          "when": "view == superoffice.views.treeview && viewItem == script"
+        },
+        {
+          "command": "@superoffice/vscode.downloadScript",
+          "group": "0_script",
+          "when": "view == superoffice.views.treeview && viewItem == script"
+        },
+        {
+          "command": "@superoffice/vscode.downloadScriptFolder",
+          "group": "0_script",
+          "when": "view == superoffice.views.treeview && viewItem == folder"
+        }
+      ],
+      "explorer/context": [
+        {
+          "submenu": "superoffice.submenu",
+          "group": "superoffice",
+          "when": "authenticated"
+        }
+      ],
+      "superoffice.submenu": [
+        {
+          "command": "@superoffice/vscode.executeScript"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "superoffice.submenu",
+        "label": "SuperOffice"
       }
     ],
     "configuration": [
       {
-          "order": 22,
-          "id": "suoLanguageServer",
-          "title": "suoLanguageServer",
-          "properties": {
-              "suoLanguageServer.trace.server": {
-                  "type": "string",
-                  "scope": "window",
-                  "enum": [
-                      "off",
-                      "messages",
-                      "verbose"
-                  ],
-                  "default": "verbose",
-                  "description": "Traces the communication between VS Code and the languageserver."
-              }
+        "order": 22,
+        "id": "superoffice",
+        "title": "superoffice",
+        "properties": {
+          "superoffice.trace.server": {
+            "type": "string",
+            "scope": "window",
+            "enum": [
+              "off",
+              "messages",
+              "verbose"
+            ],
+            "default": "verbose",
+            "description": "Traces the communication between VS Code and the languageserver."
           }
+        }
       }
-  ]
+    ]
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",

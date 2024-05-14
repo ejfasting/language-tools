@@ -4,9 +4,16 @@ import * as serverProtocol from '@volar/language-server/protocol';
 import { LabsInfo, createLabsInfo, getTsdk } from '@volar/vscode';
 import * as vscode from 'vscode';
 import * as lsp from 'vscode-languageclient/node';
+import { TreeViewDataProvider } from './providers/treeViewDataProvider';
+import { VirtualFileSystemProvider } from './workspace/virtualWorkspaceFileManager';
+import { CONFIG_COMMANDS } from './config';
+import { SuperofficeAuthenticationProvider } from './providers/authenticationProvider';
+import { registerCommands } from './commands';
 
 let client: lsp.BaseLanguageClient;
 
+export const treeViewDataProvider = new TreeViewDataProvider();
+export const vfsProvider = new VirtualFileSystemProvider();
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext): Promise<LabsInfo> {
@@ -14,12 +21,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 	const serverModule = vscode.Uri.joinPath(context.extensionUri, 'dist', 'server.js');
 	const runOptions = { execArgv: <string[]>[] };
 	
-	//const debugOptions = { execArgv: ['--nolazy', '--inspect=' + 6009] };
-	// The debug options for the server
-    // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging.
-    // By setting `process.env.DEBUG_BREAK` to a truthy value, the language server will wait until a debugger is attached.
-    const debugOptions = { execArgv: ['--nolazy', `--inspect${process.env.DEBUG_BREAK ? '-brk' : ''}=${process.env.DEBUG_SOCKET || '6009'}`] };
-	
+	//const debugOptions = { execArgv: ['--nolazy', `--inspect${process.env.DEBUG_BREAK ? '-brk' : ''}=${process.env.DEBUG_SOCKET || '6009'}`] };
+	const debugOptions = { execArgv: ['--nolazy', '--inspect=' + 6009] };
 	const serverOptions: lsp.ServerOptions = {
 		run: {
 			module: serverModule.fsPath,
@@ -44,13 +47,26 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 		},
 	};
 	client = new lsp.LanguageClient(
-		'suoLanguageServer',
+		'superoffice',
 		'SuperOffice Language Server',
 		serverOptions,
 		clientOptions,
 	);
 	await client.start();
 
+	// Register Virtual File System Provider
+    const vfsProviderRegistration = vscode.workspace.registerFileSystemProvider(CONFIG_COMMANDS.VFS_SCHEME, vfsProvider, { isCaseSensitive: true });
+    // Register Tree View Data Provider
+    const treeviewProvider = vscode.window.registerTreeDataProvider(TreeViewDataProvider.viewId, treeViewDataProvider);
+
+	// Register Authentication Provider
+    context.subscriptions.push(
+		new SuperofficeAuthenticationProvider(context)
+	);
+
+	//Register Commands
+    await registerCommands(context);
+	
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "SuperOffice-vscode" is now active!');
