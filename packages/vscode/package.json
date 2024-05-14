@@ -14,37 +14,35 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": ["onLanguage:suo"],
+  "activationEvents": [],
   "main": "./dist/client.js",
   "contributes": {
     "languages": [
       {
-        "id": "suo",
+        "id": "jsfso",
         "extensions": [
-          ".suo"
-        ]
+          ".jsfso"
+        ],
+        "configuration": "./jsfso-language-configuration.json"
+      },
+      {
+        "id": "crmscript",
+        "extensions": [
+          ".crmscript"
+        ],
+        "configuration": "./crmscript-language-configuration.json"
       }
     ],
     "grammars": [
       {
-        "language": "suo",
-        "scopeName": "text.suo.basic",
-        "path": "./syntaxes/crmscript.tmLanguage.json",
-        "embeddedLanguages": {
-          "meta.embedded.block.javascript": "javascript",
-          "meta.embedded.block.typescript": "typescript"
-        }
+        "language": "jsfso",
+        "scopeName": "source.jsfso",
+        "path": "./syntaxes/jsfso.tmLanguage.json"
       },
       {
         "language": "crmscript",
         "scopeName": "source.crmscript",
-        "path": "../langium-crmscript/syntaxes/crmscript.tmLanguage.json"
-    }
-    ],
-    "commands": [
-      {
-        "command": "superoffice-vscode-core.helloWorld",
-        "title": "Hello World"
+        "path": "./syntaxes/crmscript.tmLanguage.json"
       }
     ],
     "viewsContainers": {
@@ -69,12 +67,6 @@
         }
       ]
     },
-    "view/item/context": [
-      {
-        "command": "superoffice-vscode-core.helloWorld",
-        "when": "viewItem == superoffice.views.treeview"
-      }
-    ],
     "viewsWelcome": [
       {
         "view": "superoffice.views.treeview",
@@ -84,10 +76,10 @@
     "configuration": [
       {
           "order": 22,
-          "id": "superoffice-vscode-core",
-          "title": "superoffice-vscode-core",
+          "id": "suoLanguageServer",
+          "title": "suoLanguageServer",
           "properties": {
-              "superoffice-vscode-core.trace.server": {
+              "suoLanguageServer.trace.server": {
                   "type": "string",
                   "scope": "window",
                   "enum": [
@@ -96,7 +88,7 @@
                       "verbose"
                   ],
                   "default": "verbose",
-                  "description": "Traces the communication between VS Code and the superoffice-vscode-languageserver."
+                  "description": "Traces the communication between VS Code and the languageserver."
               }
           }
       }

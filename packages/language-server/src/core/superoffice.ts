@@ -33,14 +33,17 @@ const htmlLs = html.getLanguageService();
 export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtualCode> {
 	return {
 		getLanguageId(uri) {
-			if (uri.endsWith('.suo')) {
-				return 'suo';
+			if (uri.endsWith('.jsfso')) {
+				return 'jsfso';
+			}
+			else if(uri.endsWith('.crmscript')) {
+				return 'crmscript';
 			}
 		},
 
 		createVirtualCode(_uri, languageId, snapshot) {
-			if (languageId === 'suo') {
-				return new SuperOfficeVirtualCode(snapshot);
+			if ((languageId === 'jsfso') || (languageId === 'crmscript')) {
+				return new SuperOfficeVirtualCode(snapshot, languageId);
 			}
 
 		},
@@ -98,13 +101,14 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 
 class SuperOfficeVirtualCode implements VirtualCode {
 	id = 'root';
-	languageId = 'suo';
+	languageId = 'superoffice';
 	mappings: CodeMapping[] = []; // Change this type according to your needs
 	embeddedCodes: VirtualCode[] = [];
 	editedTextDocument: string = '';
 
 	constructor(
-		public snapshot: ts.IScriptSnapshot
+		public snapshot: ts.IScriptSnapshot,
+		public scriptType: string
 	) {
 		this.onSnapshotUpdated();
 	}
@@ -140,12 +144,12 @@ class SuperOfficeVirtualCode implements VirtualCode {
 
 	private *generateSuperOfficeCode(): Generator<VirtualCode> {
 		//Check if textDocument contains #setLanguageLevel
-		const isCrmScript = this.snapshot.getText(0, this.snapshot.getLength()).includes('#setLanguageLevel');
-		const superOfficeSegments = this.createSuperOfficeSegments(this.snapshot.getText(0, this.snapshot.getLength()), isCrmScript);
+		//const isCrmScript = this.snapshot.getText(0, this.snapshot.getLength()).includes('#setLanguageLevel');
+		const superOfficeSegments = this.createSuperOfficeSegments(this.snapshot.getText(0, this.snapshot.getLength()));
 		const generated = volarToString(superOfficeSegments);
 		yield {
-			id: isCrmScript ? 'crmscript' : 'javascript',
-			languageId: isCrmScript ? 'crmscript' : 'javascript',
+			id: this.scriptType,
+			languageId: this.scriptType === 'jsfso' ? 'javascript' : 'crmscript',
 			snapshot: {
 				getText: (start, end) => generated.slice(start, end),
 				getLength: () => generated.length,
@@ -156,12 +160,12 @@ class SuperOfficeVirtualCode implements VirtualCode {
 		};
 	}
 
-	private createSuperOfficeSegments(textDocument: string, isCrmScript: boolean): Segment<CodeInformation>[] {
+	private createSuperOfficeSegments(textDocument: string): Segment<CodeInformation>[] {
 		let start = 0;
 		let end = 0;
 		this.editedTextDocument = textDocument;
 		const segments: Segment<CodeInformation>[] = [];
-		if (!isCrmScript) {
+		if (this.scriptType === 'jsfso') {
 			//Add segment with the import for @superoffice/webapi
 			segments.push([npmImport, undefined, textDocument.length + npmImport.length, typescriptFeatures]);
 		}

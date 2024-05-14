@@ -32,9 +32,8 @@ self.onmessage = () => {
 			compilerOptions: {
                 ...ts.getDefaultCompilerOptions(),
                 allowJs: true,
-                jsx: ts.JsxEmit.Preserve,
                 module: ts.ModuleKind.ESNext,
-                moduleResolution: ts.ModuleResolutionKind.NodeNext,
+				target: ts.ScriptTarget.ESNext,
             },
 			workerContext: ctx,
 			env,

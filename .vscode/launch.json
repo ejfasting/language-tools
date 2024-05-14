@@ -9,11 +9,12 @@
             "request": "launch",
             "args": [
                 "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode/",
-                "--folder-uri=${workspaceRoot}/test"
+                "--folder-uri=${workspaceRoot}/test",
             ],
             "outFiles": [
                 "${workspaceFolder}/packages/vscode/dist/**/*.js"
             ],
+            "autoAttachChildProcesses": true,
             "preLaunchTask": "npm: build:vscode"
         }
     ]

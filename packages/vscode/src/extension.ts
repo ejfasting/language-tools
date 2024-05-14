@@ -13,7 +13,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 
 	const serverModule = vscode.Uri.joinPath(context.extensionUri, 'dist', 'server.js');
 	const runOptions = { execArgv: <string[]>[] };
-	const debugOptions = { execArgv: ['--nolazy', '--inspect=' + 6009] };
+	
+	//const debugOptions = { execArgv: ['--nolazy', '--inspect=' + 6009] };
+	// The debug options for the server
+    // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging.
+    // By setting `process.env.DEBUG_BREAK` to a truthy value, the language server will wait until a debugger is attached.
+    const debugOptions = { execArgv: ['--nolazy', `--inspect${process.env.DEBUG_BREAK ? '-brk' : ''}=${process.env.DEBUG_SOCKET || '6009'}`] };
+	
 	const serverOptions: lsp.ServerOptions = {
 		run: {
 			module: serverModule.fsPath,
@@ -27,7 +33,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 		},
 	};
 	const clientOptions: lsp.LanguageClientOptions = {
-		documentSelector: [{ language: 'suo' }],
+		documentSelector: [
+			{ language: 'jsfso' },
+			{ language: 'crmscript'}			
+		],
 		initializationOptions: {
 			typescript: {
 				tsdk: (await getTsdk(context)).tsdk,
@@ -35,8 +44,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 		},
 	};
 	client = new lsp.LanguageClient(
-		'suo-language-server',
-		'suo Language Server',
+		'suoLanguageServer',
+		'SuperOffice Language Server',
 		serverOptions,
 		clientOptions,
 	);
@@ -44,19 +53,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "superoffice-vscode-core" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('superoffice-vscode-core.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from superoffice-vscode-core!');
-	});
-
-	context.subscriptions.push(disposable);
+	console.log('Congratulations, your extension "SuperOffice-vscode" is now active!');
 
 	//TODO: Volar labs needs to be active in the debug-window for the extension, so you can run it with --disable-extensions if you want the proper intellisense.. 
 	const labsInfo = createLabsInfo(serverProtocol);

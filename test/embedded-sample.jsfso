@@ -1,13 +1,11 @@
 %EJSCRIPT_START%
 <style>.foo { c }</style>
-<% adsad %>
 <div></div>
-<% 
-const temp = "123";
+<%
+const temp = new RTL.CRMScriptAgent();
 
  %>
 <div></div>
-<% bla %>
 <script> 
 let foo: string = 123; 
 </script>

@@ -1,0 +1,7 @@
+const cAgent = new RTL.ContactAgent();
+const cEntity = await cAgent.createDefaultContactEntityAsync();
+cEntity.name = "BigCompany AS";
+        
+const pAgent = new RTL.PersonAgent();
+const pEntity = await pAgent.createDefaultPersonEntityAsync();
+pEntity.firstname = "123";

@@ -1,0 +1,14 @@
+%EJSCRIPT_START%
+<style>.foo { c }</style>
+<div></div>
+<%
+Integer myInt = 123;
+String myString = "abc";
+
+ %>
+<div></div>
+<script> 
+let foo: string = 123; 
+</script>
+</HTML>
+%EJSCRIPT_END%

@@ -11,7 +11,6 @@ const connection = createConnection();
 const server = createServer(connection);
 
 connection.listen();
-
 connection.onInitialize(params => {
 	const tsdk = loadTsdkByPath(params.initializationOptions.typescript.tsdk, params.locale);
 	return server.initialize(
