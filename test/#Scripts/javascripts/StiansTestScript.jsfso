@@ -1,5 +1,0 @@
-const agent = new RTL.PersonAgent();
-const c = await agent.getPersonAsync(3);
-const n = c.firstname;
-
-context.result.body = n; 

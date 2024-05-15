@@ -89,11 +89,6 @@
         {
           "id": "superoffice.views.treeview",
           "name": "Scripts"
-        },
-        {
-          "id": "superoffice.views.webview",
-          "name": "Webview Scripts",
-          "type": "webview"
         }
       ]
     },

@@ -115,7 +115,7 @@ function startServer(): Promise<TokenSet> {
             reject(new Error('Authorization timed out'));
             server?.close();
             server = null;
-        }, 30000);  // e.g., 30 seconds
+        }, 60000);  // e.g., 60 seconds
     });
 }
 
