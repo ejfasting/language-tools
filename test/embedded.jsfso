@@ -1,4 +1,5 @@
 %EJSCRIPT_START%
+
 <style>.foo { c }</style>
 <div></div>
 <%

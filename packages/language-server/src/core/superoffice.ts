@@ -36,7 +36,7 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 			if (uri.endsWith('.jsfso')) {
 				return 'jsfso';
 			}
-			else if(uri.endsWith('.crmscript')) {
+			else if (uri.endsWith('.crmscript')) {
 				return 'crmscript';
 			}
 		},
@@ -82,11 +82,11 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 				// Here we can edit the ts compiler.
 				// We can for example se host.getScriptFileNames() to get all the files in the project, and inject a *.d.ts file with our types. 
 				//This is an alternative to injecting the import-statement at the top of the virtual code.
-				
+
 				// Set compiler options
-				const newSettings = { 
-					...host.getCompilationSettings(), 
-					module: ts.ModuleKind.ESNext, 
+				const newSettings = {
+					...host.getCompilationSettings(),
+					module: ts.ModuleKind.ESNext,
 					moduleResolution: ModuleResolutionKind.NodeNext
 				};
 
