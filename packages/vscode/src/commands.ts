@@ -8,7 +8,7 @@ import { CONFIG_COMMANDS } from './config';
 
 const openedScripts: Map<string, vscode.TextDocument> = new Map();
 
-export async function registerCommands(context: vscode.ExtensionContext) {
+export async function registerCommands(context: vscode.ExtensionContext): Promise<void> {
 
     const signInCommand = vscode.commands.registerCommand(CONFIG_COMMANDS.CMD_SIGN_IN, async () => {
         const session = await vscode.authentication.getSession("superoffice", [], { createIfNone: true });

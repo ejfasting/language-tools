@@ -1,14 +1,30 @@
 {
     "cSpell.words": [
+        "accesstoken",
+        "apiendpoint",
+        "AUTHSERVICE",
         "crmscript",
         "Eivind",
         "EJSCRIPT",
+        "Eventdata",
+        "EXECUTESCRIPT",
+        "FILESYSTEMHANDLER",
+        "Fullname",
+        "Fullpath",
         "jsfso",
         "langium",
         "languageservice",
+        "odata",
+        "PKCE",
         "preinstall",
+        "scriptbody",
+        "SCRIPTFOLDER",
+        "SCRIPTSERVICE",
+        "SUOFILE",
         "superoffice",
+        "SYSTEMSERVICE",
         "treeview",
+        "TREEVIEWPROVIDER",
         "webapi"
     ]
 }

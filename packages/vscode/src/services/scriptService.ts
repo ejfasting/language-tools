@@ -33,14 +33,14 @@ export const executeScriptAsync = async (script: string): Promise<ExecuteScriptR
     return fetchAndCheckAsync<ExecuteScriptResponse>(CONFIG_SCRIPTSERVICE.EXECUTESCRIPT_ENDPOINT_URI, 'POST', 'Failed to execute script', payload);
 };
 
-export const executeScriptLocallyAsync = async (script: string): Promise<string> => {
-    const payload = {
-        scriptbody: script,
-        parameters: "",
-        eventData: ""
-    };
-    return fetchAndCheckAsync<any>(CONFIG_SCRIPTSERVICE.EXECUTESCRIPT_ENDPOINT_URI, 'POST', 'Failed to execute script', payload);
-};
+// export const executeScriptLocallyAsync = async (script: string): Promise<string> => {
+//     const payload = {
+//         scriptbody: script,
+//         parameters: "",
+//         eventData: ""
+//     };
+//     return fetchAndCheckAsync<any>(CONFIG_SCRIPTSERVICE.EXECUTESCRIPT_ENDPOINT_URI, 'POST', 'Failed to execute script', payload);
+// };
 
 
 export const downloadScriptAsync = async (uniqueIdentifier: string): Promise<Uri> => {

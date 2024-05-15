@@ -1,5 +1,5 @@
 //import * as vscode from 'vscode';
-import { commands, authentication, AuthenticationProvider, AuthenticationProviderAuthenticationSessionsChangeEvent, AuthenticationSession, Disposable, env, EventEmitter, ExtensionContext, ProgressLocation, Uri, UriHandler, window } from "vscode";
+import { commands, authentication, AuthenticationProvider, AuthenticationProviderAuthenticationSessionsChangeEvent, Disposable, EventEmitter, ExtensionContext, window } from "vscode";
 import { v4 as uuid } from 'uuid';
 import { authenticate } from '../services/authenticationService';
 import { TokenSet } from 'openid-client';
@@ -26,6 +26,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
     }
 
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     get onDidChangeSessions() {
         return this._sessionChangeEmitter.event;
     }
@@ -47,7 +48,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
 
                 if (session) {
                     // Check if session has expired
-                    if (session.expiresAt! < Date.now()) {
+                    if (session.expiresAt < Date.now()) {
                         console.log("Session expired");
                         this.removeSession(session.id);
                         return [];
@@ -172,7 +173,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
     /**
      * Dispose the registered services
      */
-    public async dispose() {
+    public async dispose(): Promise<void> {
         this._disposable.dispose();
     }
 }

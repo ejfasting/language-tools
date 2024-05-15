@@ -3,7 +3,7 @@
 import { IdTokenClaims } from "openid-client";
 import { AuthenticationSession } from "vscode";
 
-export interface HttpRequestResponse<T = any> {
+export interface HttpRequestResponse<T> {
     status: number;
     body: T;
     ok: boolean;
@@ -96,7 +96,7 @@ export interface SuperOfficeAuthenticationSession extends AuthenticationSession 
     refreshToken?: string;
     webApiUri: string;
     claims: UserClaims;
-    expiresAt?: number;
+    expiresAt: number;
 }
 
 export type SuoFile = {

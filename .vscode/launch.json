@@ -16,6 +16,22 @@
             ],
             "autoAttachChildProcesses": true,
             "preLaunchTask": "npm: build:vscode"
+        },
+        {
+            "name": "Launch client without extensions",
+            "type": "extensionHost",
+            "debugWebWorkerHost": true,
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode/",
+                "--folder-uri=${workspaceRoot}/test",
+                "--disable-extensions"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/packages/vscode/dist/**/*.js"
+            ],
+            "autoAttachChildProcesses": true,
+            "preLaunchTask": "npm: build:vscode"
         }
     ]
 }

@@ -73,7 +73,7 @@ export async function httpAuthenticatedRequestAsync<T>(path: string, method: htt
     }
 }
 
-export async function httpPublicRequestAsync<T>(method: https.RequestOptions["method"], urlString: string, body?: object) {
+export async function httpPublicRequestAsync<T>(method: https.RequestOptions["method"], urlString: string, body?: object): Promise<HttpRequestResponse<T>> {
     const url = new URL(urlString);
 
     const requestOptions: https.RequestOptions = {
@@ -101,7 +101,7 @@ export async function httpPublicRequestAsync<T>(method: https.RequestOptions["me
     }
 }
 
-export async function httpLocalRequestAsync<T>(urlString: string, body?: object) {
+export async function httpLocalRequestAsync<T>(urlString: string, body?: object): Promise<HttpRequestResponse<T>> {
     const url = new URL(urlString);
 
     if (!session) {
@@ -110,7 +110,9 @@ export async function httpLocalRequestAsync<T>(urlString: string, body?: object)
 
     const headers: { [key: string]: string } = {
         accept: 'application/json',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'x-apiendpoint': session.webApiUri,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'x-accesstoken': `Bearer ${session.accessToken}`
     };
 
@@ -149,11 +151,14 @@ async function executeHttpRequestAsync<T>(options: https.RequestOptions, body?: 
 
             res.on('end', () => {
                 try {
+                    if(res.statusCode === undefined) {
+                        throw new Error("Status code is undefined");
+                    }
                     const parsedData = JSON.parse(data);
                     const responseObject: HttpRequestResponse<T> = {
-                        status: res.statusCode!,
+                        status: res.statusCode,
                         body: parsedData as T, // Type assertions
-                        ok: res.statusCode! >= 200 && res.statusCode! < 300,
+                        ok: res.statusCode >= 200 && res.statusCode < 300,
                         statusText: res.statusMessage ?? "defaultString"
                     };
                     resolve(responseObject);
@@ -187,11 +192,14 @@ async function executeRequestAsync<T>(options: https.RequestOptions, body?: stri
 
             res.on('end', () => {
                 try {
+                    if(res.statusCode === undefined) {
+                        throw new Error("Status code is undefined");
+                    }
                     const parsedData = JSON.parse(data);
                     const responseObject: HttpRequestResponse<T> = {
-                        status: res.statusCode!,
+                        status: res.statusCode,
                         body: parsedData as T, // Type assertions
-                        ok: res.statusCode! >= 200 && res.statusCode! < 300,
+                        ok: res.statusCode >= 200 && res.statusCode < 300,
                         statusText: res.statusMessage ?? "defaultString"
                     };
                     resolve(responseObject);

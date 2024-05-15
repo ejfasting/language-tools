@@ -2,8 +2,9 @@ import * as vscode from 'vscode';
 import { ScriptInfo } from '../types';
 import { getAllScriptInfoAsync } from '../services/scriptService';
 import { currentSession } from './authenticationProvider';
+import { logoUri } from '../extension';
 
-const logoUri = vscode.Uri.joinPath(vscode.extensions.getExtension('superoffice.@superoffice/vscode')!.extensionUri, 'resources', 'logo.svg');
+///const logoUri = vscode.Uri.joinPath(vscode.extensions.getExtension('superoffice.@superoffice/vscode')!.extensionUri, 'resources', 'logo.svg');
 const iconPath = {
     light: logoUri,
     dark: logoUri
