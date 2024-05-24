@@ -10,13 +10,13 @@ export type CrmscriptAddedServices = {
     validation: {
         CrmscriptValidator: CrmscriptValidator
     }
-}
+};
 
 /**
  * Union of Langium default services and your custom services - use this as constructor parameter
  * of custom service classes.
  */
-export type CrmscriptServices = LangiumServices & CrmscriptAddedServices
+export type CrmscriptServices = LangiumServices & CrmscriptAddedServices;
 
 /**
  * Dependency injection module that overrides Langium default services and contributes the

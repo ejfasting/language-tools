@@ -19,6 +19,7 @@ export function create({
             const langiumDocument = shared.workspace.LangiumDocumentFactory.fromTextDocument(document);
             const params = { textDocument: document, position: position };
             const result = await Crmscript.lsp.CompletionProvider?.getCompletion(langiumDocument, params, token);
+
             return result;
           }
           return undefined;

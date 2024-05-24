@@ -1,42 +1,133 @@
 grammar Crmscript
 
 entry Model:
-    (stmts+=Stmt | defs+=Def)*;
-
-Stmt: Cmd;
-Cmd: For;
+    (defs+=Def | stmts+=Stmt | persons+=Person | greetings+=Greeting)*;
 
 Def: 
-    'String' name=ID '=' value=STRING ';' |
-    'Integer' name=ID '=' value=INT ';';
+    ExpressionBlock | 
+    VariableDeclaration ';' | 
+    Expression ';' ;
 
-Param: name=ID;
+Stmt:
+    IfStatement |
+    WhileStatement |
+    ForStatement |
+    TryCatchStatement |
+    PrintStatement ;
 
-// for x = 0 to 10 - must be changed to SuO
-For: 'for' var=Param '=' e1=Expr 'to' e2=Expr Block;
+IfStatement: 
+    'if' '(' condition=Expression ')' block=ExpressionBlock 
+    ('else' elseBlock=ExpressionBlock)? ;
 
-Expr: Add;
-Add infers Expr:
-    Mult ({infer BinExpr.e1=current} op=('+'|'-') e2=Mult)*;
-Mult infers Expr:
-    PrimExpr ({infer BinExpr.e1=current} op=('*'|'/') e2=PrimExpr)*;
-PrimExpr: Lit | Ref | Group | NegExpr;
+WhileStatement:
+    'while' '(' condition=Expression ')' block=ExpressionBlock ;
 
-// literal int
-Lit: val=INT;
-// cross-reference to parameter
-Ref: val=[Param:ID];
-// grouped expression with parantheses
-Group: '(' ge=Expr ')';
-// negated expression
-NegExpr: '-' ne=Expr;
+ForStatement:
+    'for' '(' init=IntegerDeclaration? ';' condition=Expression ';' increment=Increment? ')' block=ExpressionBlock ;
 
-fragment Block: '{' body+=Stmt* '}'; 
+TryCatchStatement:
+     'try' block=ExpressionBlock 'catch' '(' exception=ID ')' catchBlock=ExpressionBlock ;
+
+Increment:
+    var=ID '++';
+
+PrintStatement: 'print' '(' value=Expression ')' ';';
+ReturnStatement: 'return' value=Expression? ';';
+ExpressionBlock: '{'
+    (defs+=Def)*
+'}';
+
+VariableDeclaration returns NamedElement:
+    {infer VariableDeclaration} StringDeclaration | {infer VariableDeclaration} IntegerDeclaration | {infer VariableDeclaration} BoolDeclaration | {infer VariableDeclaration} FloatDeclaration;
+
+StringDeclaration:
+     'String' name=ID (assignment?='=' value=Expression)?;
+
+IntegerDeclaration:
+    'Integer' name=ID (assignment?='=' value=Expression)?;
+
+BoolDeclaration:
+    'Bool' name=ID (assignment?='=' value=Expression)?;
+
+FloatDeclaration:
+    'Float' name=ID (assignment?='=' value=Expression)?;
+
+Expression:
+    Assignment;
+
+Assignment infers Expression:
+    Addition ({infer BinaryExpression.left=current} operator=('=') right=Addition)*;
+
+Addition infers Expression:
+    Multiplication ({infer BinaryExpression.left=current} operator=('+' | '-') right=Multiplication)*;
+
+Multiplication infers Expression:
+    Logical ({infer BinaryExpression.left=current} operator=('*' | '/') right=Logical)*;
+
+Logical infers Expression:
+    Comparison ({infer BinaryExpression.left=current} operator=('and' | 'or') right=Comparison)*;
+
+Comparison infers Expression:
+    MemberCall ({infer BinaryExpression.left=current} operator=('<' | '<=' | '>' | '>=' | '==' | '!=') right=MemberCall)*;
+
+MemberCall infers Expression:
+    Primary
+	({infer MemberCall.previous=current} 
+        // Member call with function call
+        ("." element=[NamedElement:ID] (
+		explicitOperationCall?='('
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		')')? 
+        // Chained function call
+        | (
+		explicitOperationCall?='('
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		')'))
+    )*;
+
+Primary infers Expression:
+    '(' Expression ')' |
+    UnaryExpression |
+    StringExpression |
+    BooleanExpression |
+    NumberExpression |
+    NilExpression |
+    FeatureCall;
+
+FeatureCall infers Expression:
+	{infer MemberCall}
+	(element=[NamedElement:ID] | element=[NamedElement:'this'] | element=[NamedElement:'super'])
+    // Optional function call after referencing an element
+    (explicitOperationCall?='('
+	(
+	    arguments+=Expression (',' arguments+=Expression)*
+	)?
+	')')?;
+
+UnaryExpression:
+   operator=('!' | '-' | '+') value=Expression ;
+
+NumberExpression: value=NUMBER;
+StringExpression: value=STRING;
+BooleanExpression: value?='true' | 'false';
+NilExpression: value='nil';
+
+Customer:
+    'Customer' name=ID bong=ID;
+
+Greeting:
+    'Hello' person=[Person:ID] '!';
+
+type NamedElement =  VariableDeclaration ;
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal INT returns number: /[0-9]+/;
-terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
+terminal NUMBER returns number: /[0-9]+(\.[0-9]+)?/;
+terminal STRING: /"[^"]*"/;
 
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;

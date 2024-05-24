@@ -149,7 +149,7 @@ class SuperOfficeVirtualCode implements VirtualCode {
 		const generated = volarToString(superOfficeSegments);
 		yield {
 			id: this.scriptType,
-			languageId: this.scriptType === 'jsfso' ? 'javascript' : 'crmscript',
+			languageId: this.scriptType === 'jsfso' ? 'typescript' : 'crmscript',
 			snapshot: {
 				getText: (start, end) => generated.slice(start, end),
 				getLength: () => generated.length,

@@ -1,6 +1,41 @@
-#setLanguageLevel 4;
-Integer myInt = "123";
-Integer myInt2 = 123;
 
-String myString = 123;
-String myString2 = "123";
+
+//Invalid
+#setLanguageLevel 4;
+Integer myInt2 = "123"; //Should be invalid
+Integer myInt3 = true; //Should be invalid
+String myString = 123; //Should be invalid
+String myString3 = true; //Should be invalid
+Bool myBool = "123";
+Bool myBool2 = 123;
+
+//Valid
+Bool myBool = true;
+String myEmptyString; //Should be valid
+String myDeclaredString = "123"; //Should be valid
+String myAdditionString = "123" + "123";
+Integer myEmptyInt; //Should be valid
+Integer myDeclaredInt = 123; //Should be valid
+Integer myAdditionInt = 123 + 123; //Should be valid
+Bool myEmptyBool;
+Bool myDeclaredBool = true;
+"123";
+13213;
+true;
+
+
+for(Integer i = 0; i > 20; i++){
+    Integer j = i + 20;
+    String bla = "123";
+    
+}
+
+
+try{
+
+}
+catch(exception){
+
+}
+
+
