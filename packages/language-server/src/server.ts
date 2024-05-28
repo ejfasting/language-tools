@@ -7,6 +7,12 @@ import { createServer, createConnection, createTypeScriptProjectProvider, loadTs
 import { create as createCrmscriptService } from './plugins/crmscript.js';
 import { getSuperOfficeLanguageModule } from './core/superoffice.js';
 
+import { createCrmscriptServices } from '@superoffice/langium-crmscript/src/language/crmscript-module.js';
+import { NodeFileSystem } from 'langium/node';
+
+// Inject the shared services and language-specific services
+const { shared, Crmscript } = createCrmscriptServices({ ...NodeFileSystem });
+
 const connection = createConnection();
 const server = createServer(connection);
 
@@ -20,12 +26,18 @@ connection.onInitialize(params => {
 			createCssService(),
 			createEmmetService({}),
 			...createTypeScriptServices(tsdk.typescript, {}),
-			createCrmscriptService(),
+			createCrmscriptService({ sharedService: shared, crmscriptService: Crmscript }),
 		],
 		createTypeScriptProjectProvider(tsdk.typescript, tsdk.diagnosticMessages, () => [getSuperOfficeLanguageModule()]),
 	);
 });
 
-connection.onInitialized(server.initialized);
+connection.onInitialized(params => {
+	shared.workspace.WorkspaceManager.initialized(params);
+	console.log('initialized');
+	return server.initialized;
+})
 
+
+;/**/
 connection.onShutdown(server.shutdown);

@@ -16,7 +16,7 @@ export const CrmscriptTerminals = {
     SL_COMMENT: /\/\/[^\n\r]*/,
 };
 
-export type Def = Expression | ExpressionBlock | NamedElement | Student;
+export type Def = Expression | ExpressionBlock | NamedElement;
 
 export const Def = 'Def';
 
@@ -32,7 +32,7 @@ export function isExpression(item: unknown): item is Expression {
     return reflection.isInstance(item, Expression);
 }
 
-export type NamedElement = Student | VariableDeclaration;
+export type NamedElement = VariableDeclaration;
 
 export const NamedElement = 'NamedElement';
 
@@ -277,21 +277,6 @@ export function isStringExpression(item: unknown): item is StringExpression {
     return reflection.isInstance(item, StringExpression);
 }
 
-export interface Student extends AstNode {
-    readonly $container: ExpressionBlock | Model;
-    readonly $type: 'Student';
-    address: string;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-}
-
-export const Student = 'Student';
-
-export function isStudent(item: unknown): item is Student {
-    return reflection.isInstance(item, Student);
-}
-
 export interface TryCatchStatement extends AstNode {
     readonly $container: Model;
     readonly $type: 'TryCatchStatement';
@@ -354,7 +339,6 @@ export type CrmscriptAstType = {
     Stmt: Stmt
     StringDeclaration: StringDeclaration
     StringExpression: StringExpression
-    Student: Student
     TryCatchStatement: TryCatchStatement
     UnaryExpression: UnaryExpression
     VariableDeclaration: VariableDeclaration
@@ -364,7 +348,7 @@ export type CrmscriptAstType = {
 export class CrmscriptAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return ['BinaryExpression', 'BoolDeclaration', 'BooleanExpression', 'Def', 'Expression', 'ExpressionBlock', 'FloatDeclaration', 'ForStatement', 'IfStatement', 'Increment', 'IntegerDeclaration', 'MemberCall', 'Model', 'NamedElement', 'NilExpression', 'NumberExpression', 'PrintStatement', 'ReturnStatement', 'Stmt', 'StringDeclaration', 'StringExpression', 'Student', 'TryCatchStatement', 'UnaryExpression', 'VariableDeclaration', 'WhileStatement'];
+        return ['BinaryExpression', 'BoolDeclaration', 'BooleanExpression', 'Def', 'Expression', 'ExpressionBlock', 'FloatDeclaration', 'ForStatement', 'IfStatement', 'Increment', 'IntegerDeclaration', 'MemberCall', 'Model', 'NamedElement', 'NilExpression', 'NumberExpression', 'PrintStatement', 'ReturnStatement', 'Stmt', 'StringDeclaration', 'StringExpression', 'TryCatchStatement', 'UnaryExpression', 'VariableDeclaration', 'WhileStatement'];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -395,9 +379,6 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
             case TryCatchStatement:
             case WhileStatement: {
                 return this.isSubtype(Stmt, supertype);
-            }
-            case Student: {
-                return this.isSubtype(Def, supertype) || this.isSubtype(NamedElement, supertype);
             }
             case VariableDeclaration: {
                 return this.isSubtype(NamedElement, supertype);
@@ -574,17 +555,6 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     name: 'StringExpression',
                     properties: [
                         { name: 'value' }
-                    ]
-                };
-            }
-            case 'Student': {
-                return {
-                    name: 'Student',
-                    properties: [
-                        { name: 'address' },
-                        { name: 'firstName' },
-                        { name: 'lastName' },
-                        { name: 'phoneNumber' }
                     ]
                 };
             }

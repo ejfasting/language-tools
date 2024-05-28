@@ -1,7 +1,7 @@
 grammar Crmscript
 
 entry Model:
-    (defs+=Def | stmts+=Stmt | persons+=Person | greetings+=Greeting)*;
+    (defs+=Def | stmts+=Stmt)*;
 
 Def: 
     ExpressionBlock | 
@@ -115,12 +115,6 @@ NumberExpression: value=NUMBER;
 StringExpression: value=STRING;
 BooleanExpression: value?='true' | 'false';
 NilExpression: value='nil';
-
-Customer:
-    'Customer' name=ID bong=ID;
-
-Greeting:
-    'Hello' person=[Person:ID] '!';
 
 type NamedElement =  VariableDeclaration ;
 

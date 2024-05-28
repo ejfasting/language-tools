@@ -96,13 +96,6 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
                 "value": ";"
               }
             ]
-          },
-          {
-            "$type": "RuleCall",
-            "rule": {
-              "$ref": "#/rules@30"
-            },
-            "arguments": []
           }
         ]
       },
@@ -409,7 +402,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@31"
               },
               "arguments": []
             }
@@ -452,7 +445,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@31"
               },
               "arguments": []
             }
@@ -696,7 +689,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@31"
               },
               "arguments": []
             }
@@ -754,7 +747,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@31"
               },
               "arguments": []
             }
@@ -812,7 +805,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@31"
               },
               "arguments": []
             }
@@ -870,7 +863,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
             "terminal": {
               "$type": "RuleCall",
               "rule": {
-                "$ref": "#/rules@32"
+                "$ref": "#/rules@31"
               },
               "arguments": []
             }
@@ -1341,7 +1334,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
                           "terminal": {
                             "$type": "RuleCall",
                             "rule": {
-                              "$ref": "#/rules@32"
+                              "$ref": "#/rules@31"
                             },
                             "arguments": []
                           },
@@ -1594,7 +1587,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
                   "terminal": {
                     "$type": "RuleCall",
                     "rule": {
-                      "$ref": "#/rules@32"
+                      "$ref": "#/rules@31"
                     },
                     "arguments": []
                   },
@@ -1762,7 +1755,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@33"
+            "$ref": "#/rules@32"
           },
           "arguments": []
         }
@@ -1784,7 +1777,7 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
         "terminal": {
           "$type": "RuleCall",
           "rule": {
-            "$ref": "#/rules@34"
+            "$ref": "#/rules@33"
           },
           "arguments": []
         }
@@ -1835,73 +1828,6 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
           "$type": "Keyword",
           "value": "nil"
         }
-      },
-      "definesHiddenTokens": false,
-      "entry": false,
-      "fragment": false,
-      "hiddenTokens": [],
-      "parameters": [],
-      "wildcard": false
-    },
-    {
-      "$type": "ParserRule",
-      "name": "Student",
-      "definition": {
-        "$type": "Group",
-        "elements": [
-          {
-            "$type": "Keyword",
-            "value": "Student"
-          },
-          {
-            "$type": "Assignment",
-            "feature": "firstName",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@32"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Assignment",
-            "feature": "lastName",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@32"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Assignment",
-            "feature": "address",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@34"
-              },
-              "arguments": []
-            }
-          },
-          {
-            "$type": "Assignment",
-            "feature": "phoneNumber",
-            "operator": "=",
-            "terminal": {
-              "$type": "RuleCall",
-              "rule": {
-                "$ref": "#/rules@34"
-              },
-              "arguments": []
-            }
-          }
-        ]
       },
       "definesHiddenTokens": false,
       "entry": false,
@@ -1980,21 +1906,10 @@ export const CrmscriptGrammar = (): Grammar => loadedCrmscriptGrammar ?? (loaded
       "$type": "Type",
       "name": "NamedElement",
       "type": {
-        "$type": "UnionType",
-        "types": [
-          {
-            "$type": "SimpleType",
-            "typeRef": {
-              "$ref": "#/rules@11/definition/elements@0/elements@0/inferredType"
-            }
-          },
-          {
-            "$type": "SimpleType",
-            "typeRef": {
-              "$ref": "#/rules@30"
-            }
-          }
-        ]
+        "$type": "SimpleType",
+        "typeRef": {
+          "$ref": "#/rules@11/definition/elements@0/elements@0/inferredType"
+        }
       }
     }
   ],

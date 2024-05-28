@@ -10,7 +10,7 @@
     },
     {
       "name": "keyword.control.crmscript",
-      "match": "\\b(Bool|Float|Integer|String|Student|and|catch|else|false|for|if|nil|or|print|super|this|true|try|while)\\b"
+      "match": "\\b(Bool|Float|Integer|String|and|catch|else|false|for|if|nil|or|print|super|this|true|try|while)\\b"
     },
     {
       "name": "string.quoted.double.crmscript",
