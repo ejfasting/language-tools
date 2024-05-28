@@ -1,7 +1,6 @@
 
 
 //Invalid
-#setLanguageLevel 4;
 Integer myInt2 = "123"; //Should be invalid
 Integer myInt3 = true; //Should be invalid
 String myString = 123; //Should be invalid
@@ -22,7 +21,7 @@ Bool myDeclaredBool = true;
 "123";
 13213;
 true;
-
+Integer i = 213213;
 
 for(Integer i = 0; i > 20; i++){
     Integer j = i + 20;
@@ -30,6 +29,12 @@ for(Integer i = 0; i > 20; i++){
     
 }
 
+class Customer {
+    String name;
+    Integer age;
+    Bool isVip;
+    DateTime lastVisit;
+}
 
 try{
 

@@ -11,7 +11,7 @@ import { createCrmscriptServices } from '@superoffice/langium-crmscript/src/lang
 import { NodeFileSystem } from 'langium/node';
 
 // Inject the shared services and language-specific services
-const { shared, Crmscript } = createCrmscriptServices({ ...NodeFileSystem });
+const { shared, crmscript } = createCrmscriptServices({ ...NodeFileSystem });
 
 const connection = createConnection();
 const server = createServer(connection);
@@ -26,7 +26,7 @@ connection.onInitialize(params => {
 			createCssService(),
 			createEmmetService({}),
 			...createTypeScriptServices(tsdk.typescript, {}),
-			createCrmscriptService({ sharedService: shared, crmscriptService: Crmscript }),
+			createCrmscriptService({ sharedService: shared, crmscriptService: crmscript }),
 		],
 		createTypeScriptProjectProvider(tsdk.typescript, tsdk.diagnosticMessages, () => [getSuperOfficeLanguageModule()]),
 	);

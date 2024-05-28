@@ -1,24 +1,24 @@
-import { isFunctionType, TypeDescription } from "./descriptions.js";
-//import { getClassChain } from "./infer.js";
+import { isClassType, isFunctionType, isNilType, TypeDescription } from "./descriptions.js";
+import { getClassChain } from "./infer.js";
 
 export function isAssignable(from: TypeDescription, to: TypeDescription): boolean {
-    // if (isClassType(from)) {
-    //     if (!isClassType(to)) {
-    //         return false;
-    //     }
-    //     const fromLit = from.literal;
-    //     const fromChain = getClassChain(fromLit);
-    //     const toClass = to.literal;
-    //     for (const fromClass of fromChain) {
-    //         if (fromClass === toClass) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-    // if (isNilType(from)) {
-    //     return isClassType(to);
-    // }
+    if (isClassType(from)) {
+        if (!isClassType(to)) {
+            return false;
+        }
+        const fromLit = from.literal;
+        const fromChain = getClassChain(fromLit);
+        const toClass = to.literal;
+        for (const fromClass of fromChain) {
+            if (fromClass === toClass) {
+                return true;
+            }
+        }
+        return false;
+    }
+    if (isNilType(from)) {
+        return isClassType(to);
+    }
     if (isFunctionType(from)) {
         if (!isFunctionType(to)) {
             return false;

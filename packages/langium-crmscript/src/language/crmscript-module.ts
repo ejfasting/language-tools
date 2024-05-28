@@ -1,14 +1,24 @@
-import { type Module, inject } from 'langium';
+import { type Module, inject, LangiumSharedCoreServices, DeepPartial } from 'langium';
 import { createDefaultModule, createDefaultSharedModule, type DefaultSharedModuleContext, type LangiumServices, type LangiumSharedServices, type PartialLangiumServices } from 'langium/lsp';
 import { CrmscriptGeneratedModule, CrmscriptGeneratedSharedModule } from './generated/module.js';
 import { CrmscriptValidator, registerValidationChecks } from './crmscript-validator.js';
+import { CrmscriptWorkspaceManager } from './lib/workspaceManager.js';
+import { CustomCompletionProvider } from './overrides/completionProvider.js';
+
+export type CrmscriptSharedServices = LangiumSharedServices;
+
+export const crmscriptSharedModule: Module<CrmscriptSharedServices, DeepPartial<CrmscriptSharedServices>> = {
+    workspace: {
+        WorkspaceManager: (services: LangiumSharedCoreServices) => new CrmscriptWorkspaceManager(services)
+    }
+};
 
 /**
  * Declaration of custom services - add your own service classes here.
  */
 export type CrmscriptAddedServices = {
     validation: {
-        CrmscriptValidator: CrmscriptValidator
+        crmscriptValidator: CrmscriptValidator
     }
 };
 
@@ -23,9 +33,9 @@ export type CrmscriptServices = LangiumServices & CrmscriptAddedServices;
  * declared custom services. The Langium defaults can be partially specified to override only
  * selected services, while the custom services must be fully specified.
  */
-export const CrmscriptModule: Module<CrmscriptServices, PartialLangiumServices & CrmscriptAddedServices> = {
+export const crmscriptModule: Module<CrmscriptServices, PartialLangiumServices & CrmscriptAddedServices> = {
     validation: {
-        CrmscriptValidator: () => new CrmscriptValidator()
+        crmscriptValidator: () => new CrmscriptValidator()
     }
 };
 
@@ -46,18 +56,22 @@ export const CrmscriptModule: Module<CrmscriptServices, PartialLangiumServices &
  */
 export function createCrmscriptServices(context: DefaultSharedModuleContext): {
     shared: LangiumSharedServices,
-    Crmscript: CrmscriptServices
+    crmscript: CrmscriptServices
 } {
     const shared = inject(
         createDefaultSharedModule(context),
-        CrmscriptGeneratedSharedModule
+        CrmscriptGeneratedSharedModule,
+        crmscriptSharedModule
     );
-    const Crmscript = inject(
+    const crmscript = inject(
         createDefaultModule({ shared }),
         CrmscriptGeneratedModule,
-        CrmscriptModule
+        crmscriptModule
     );
-    shared.ServiceRegistry.register(Crmscript);
-    registerValidationChecks(Crmscript);
-    return { shared, Crmscript };
+    shared.ServiceRegistry.register(crmscript);
+    
+    crmscript.lsp.CompletionProvider = new CustomCompletionProvider(crmscript);
+
+    registerValidationChecks(crmscript);
+    return { shared, crmscript };
 }

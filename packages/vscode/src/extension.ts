@@ -9,6 +9,7 @@ import { VirtualFileSystemProvider } from './workspace/virtualWorkspaceFileManag
 import { CONFIG_COMMANDS } from './config';
 import { SuperofficeAuthenticationProvider } from './providers/authenticationProvider';
 import { registerCommands } from './commands';
+import { DslLibraryFileSystemProvider } from './providers/dslLibraryFileSystemProvider';
 
 let client: lsp.BaseLanguageClient;
 
@@ -73,7 +74,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "SuperOffice-vscode" is now active!');
-
+	
+	DslLibraryFileSystemProvider.register(context);
 	//TODO: Volar labs needs to be active in the debug-window for the extension, so you can run it with --disable-extensions if you want the proper intellisense.. 
 	const labsInfo = createLabsInfo(serverProtocol);
 	labsInfo.addLanguageClient(client);
