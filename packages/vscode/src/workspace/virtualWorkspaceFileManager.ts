@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-
+//TODO: Refactor this to be a class, like the others
 export class VirtualFileSystemProvider implements vscode.FileSystemProvider {
     private _onDidChangeFile: vscode.EventEmitter<vscode.FileChangeEvent[]> = new vscode.EventEmitter();
     readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> = this._onDidChangeFile.event;

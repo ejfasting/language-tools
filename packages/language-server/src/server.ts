@@ -4,19 +4,35 @@ import { create as createCssService } from 'volar-service-css';
 import { create as createTypeScriptServices } from 'volar-service-typescript';
 import { createServer, createConnection, createTypeScriptProjectProvider, loadTsdkByPath } from '@volar/language-server/node.js';
 
-import { create as createCrmscriptService } from './plugins/crmscript.js';
+import { create as createCrmscriptService, createOrUpdateLangiumDocument } from './plugins/crmscript-definition.js';
 import { getSuperOfficeLanguageModule } from './core/superoffice.js';
 
 import { createCrmscriptServices } from '@superoffice/langium-crmscript/src/language/crmscript-module.js';
 import { NodeFileSystem } from 'langium/node';
-
-// Inject the shared services and language-specific services
-const { shared, crmscript } = createCrmscriptServices({ ...NodeFileSystem });
+import { URI } from 'langium';
 
 const connection = createConnection();
+
 const server = createServer(connection);
 
 connection.listen();
+
+// Inject the shared services and language-specific services
+const { shared, Definition } = createCrmscriptServices({ connection, ...NodeFileSystem });
+
+//TODO: Figure out if this is correct. it seems very inefficient
+server.documents.onDidChangeContent(change => {
+	if(change.document.uri.endsWith('.crmscript-definition')) {
+		//createOrUpdateLangiumDocument(shared, change.document);
+	}
+});
+
+server.documents.onDidOpen(change => {
+	if(change.document.uri.endsWith('.crmscript-definition')) {
+		//createOrUpdateLangiumDocument(shared, change.document);
+	}
+});
+
 connection.onInitialize(params => {
 	const tsdk = loadTsdkByPath(params.initializationOptions.typescript.tsdk, params.locale);
 	return server.initialize(
@@ -26,7 +42,7 @@ connection.onInitialize(params => {
 			createCssService(),
 			createEmmetService({}),
 			...createTypeScriptServices(tsdk.typescript, {}),
-			createCrmscriptService({ sharedService: shared, crmscriptService: crmscript }),
+			createCrmscriptService({ sharedService: shared, definitionService: Definition }),
 		],
 		createTypeScriptProjectProvider(tsdk.typescript, tsdk.diagnosticMessages, () => [getSuperOfficeLanguageModule()]),
 	);
@@ -34,10 +50,7 @@ connection.onInitialize(params => {
 
 connection.onInitialized(params => {
 	shared.workspace.WorkspaceManager.initialized(params);
-	console.log('initialized');
 	return server.initialized;
-})
+});
 
-
-;/**/
 connection.onShutdown(server.shutdown);

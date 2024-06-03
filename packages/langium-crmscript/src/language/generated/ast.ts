@@ -24,7 +24,15 @@ export function isClassMember(item: unknown): item is ClassMember {
     return reflection.isInstance(item, ClassMember);
 }
 
-export type Element = Class | Expression | ExpressionBlock | ForStatement | FunctionDeclaration | IfStatement | NamedElement | PrintStatement | ReturnStatement | TryCatchStatement | WhileStatement;
+export type CrmscriptElement = Builtin | NamedElement;
+
+export const CrmscriptElement = 'CrmscriptElement';
+
+export function isCrmscriptElement(item: unknown): item is CrmscriptElement {
+    return reflection.isInstance(item, CrmscriptElement);
+}
+
+export type Element = Expression | ExpressionBlock | ForStatement | FunctionDeclaration | IfStatement | NamedElement | PrintStatement | ReturnStatement | WhileStatement;
 
 export const Element = 'Element';
 
@@ -32,7 +40,7 @@ export function isElement(item: unknown): item is Element {
     return reflection.isInstance(item, Element);
 }
 
-export type Expression = BinaryExpression | BooleanExpression | MemberCall | NilExpression | NumberExpression | StringExpression | UnaryExpression;
+export type Expression = BinaryExpression | BooleanExpression | IntegerExpression | MemberCall | NilExpression | StringExpression | UnaryExpression;
 
 export const Expression = 'Expression';
 
@@ -49,7 +57,7 @@ export function isNamedElement(item: unknown): item is NamedElement {
 }
 
 export interface BinaryExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | MemberCall | Model | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | DefinitionUnit | ExpressionBlock | ForStatement | IfStatement | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'BinaryExpression';
     left: Expression;
     operator: '!=' | '*' | '+' | '-' | '/' | '<' | '<=' | '=' | '==' | '>' | '>=' | 'and' | 'or';
@@ -63,7 +71,7 @@ export function isBinaryExpression(item: unknown): item is BinaryExpression {
 }
 
 export interface BooleanExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | MemberCall | Model | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | DefinitionUnit | ExpressionBlock | ForStatement | IfStatement | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'BooleanExpression';
     value: boolean;
 }
@@ -74,8 +82,21 @@ export function isBooleanExpression(item: unknown): item is BooleanExpression {
     return reflection.isInstance(item, BooleanExpression);
 }
 
+export interface Builtin extends AstNode {
+    readonly $container: ImplementationUnit;
+    readonly $type: 'Builtin';
+    class: Reference<Class>;
+    name: string;
+}
+
+export const Builtin = 'Builtin';
+
+export function isBuiltin(item: unknown): item is Builtin {
+    return reflection.isInstance(item, Builtin);
+}
+
 export interface Class extends AstNode {
-    readonly $container: ExpressionBlock | ForStatement | Model;
+    readonly $container: DefinitionUnit | ExpressionBlock | ForStatement | ImplementationUnit;
     readonly $type: 'Class';
     members: Array<ClassMember>;
     name: string;
@@ -87,8 +108,19 @@ export function isClass(item: unknown): item is Class {
     return reflection.isInstance(item, Class);
 }
 
+export interface DefinitionUnit extends AstNode {
+    readonly $type: 'DefinitionUnit';
+    elements: Array<Element>;
+}
+
+export const DefinitionUnit = 'DefinitionUnit';
+
+export function isDefinitionUnit(item: unknown): item is DefinitionUnit {
+    return reflection.isInstance(item, DefinitionUnit);
+}
+
 export interface ExpressionBlock extends AstNode {
-    readonly $container: ExpressionBlock | ForStatement | FunctionDeclaration | IfStatement | MethodMember | Model | TryCatchStatement | WhileStatement;
+    readonly $container: DefinitionUnit | ExpressionBlock | ForStatement | FunctionDeclaration | IfStatement | MethodMember | WhileStatement;
     readonly $type: 'ExpressionBlock';
     elements: Array<Element>;
 }
@@ -100,10 +132,10 @@ export function isExpressionBlock(item: unknown): item is ExpressionBlock {
 }
 
 export interface FieldMember extends AstNode {
-    readonly $container: Class | ExpressionBlock | ForStatement | Model;
+    readonly $container: Class | DefinitionUnit | ExpressionBlock | ForStatement | ImplementationUnit;
     readonly $type: 'FieldMember';
     name: string;
-    type: TypeReference;
+    type: Reference<Class>;
 }
 
 export const FieldMember = 'FieldMember';
@@ -113,12 +145,12 @@ export function isFieldMember(item: unknown): item is FieldMember {
 }
 
 export interface ForStatement extends AstNode {
-    readonly $container: ExpressionBlock | Model;
+    readonly $container: DefinitionUnit | ExpressionBlock;
     readonly $type: 'ForStatement';
     block: ExpressionBlock;
-    condition: Expression;
+    condition?: Expression;
     counter?: NamedElement;
-    increment?: Increment;
+    execution?: Expression;
 }
 
 export const ForStatement = 'ForStatement';
@@ -128,12 +160,12 @@ export function isForStatement(item: unknown): item is ForStatement {
 }
 
 export interface FunctionDeclaration extends AstNode {
-    readonly $container: ExpressionBlock | ForStatement | Model;
+    readonly $container: DefinitionUnit | ExpressionBlock | ForStatement | ImplementationUnit;
     readonly $type: 'FunctionDeclaration';
     body: ExpressionBlock;
     name: string;
     parameters: Array<Parameter>;
-    returnType: TypeReference;
+    returnType: Reference<Class>;
 }
 
 export const FunctionDeclaration = 'FunctionDeclaration';
@@ -143,7 +175,7 @@ export function isFunctionDeclaration(item: unknown): item is FunctionDeclaratio
 }
 
 export interface IfStatement extends AstNode {
-    readonly $container: ExpressionBlock | Model;
+    readonly $container: DefinitionUnit | ExpressionBlock;
     readonly $type: 'IfStatement';
     block: ExpressionBlock;
     condition: Expression;
@@ -156,33 +188,31 @@ export function isIfStatement(item: unknown): item is IfStatement {
     return reflection.isInstance(item, IfStatement);
 }
 
-export interface Increment extends AstNode {
-    readonly $container: ForStatement;
-    readonly $type: 'Increment';
-    var: string;
+export interface ImplementationUnit extends AstNode {
+    readonly $type: 'ImplementationUnit';
+    elements: Array<CrmscriptElement>;
 }
 
-export const Increment = 'Increment';
+export const ImplementationUnit = 'ImplementationUnit';
 
-export function isIncrement(item: unknown): item is Increment {
-    return reflection.isInstance(item, Increment);
+export function isImplementationUnit(item: unknown): item is ImplementationUnit {
+    return reflection.isInstance(item, ImplementationUnit);
 }
 
-export interface LambdaParameter extends AstNode {
-    readonly $container: TypeReference;
-    readonly $type: 'LambdaParameter';
-    name?: string;
-    type: TypeReference;
+export interface IntegerExpression extends AstNode {
+    readonly $container: BinaryExpression | DefinitionUnit | ExpressionBlock | ForStatement | IfStatement | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $type: 'IntegerExpression';
+    value: number;
 }
 
-export const LambdaParameter = 'LambdaParameter';
+export const IntegerExpression = 'IntegerExpression';
 
-export function isLambdaParameter(item: unknown): item is LambdaParameter {
-    return reflection.isInstance(item, LambdaParameter);
+export function isIntegerExpression(item: unknown): item is IntegerExpression {
+    return reflection.isInstance(item, IntegerExpression);
 }
 
 export interface MemberCall extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | MemberCall | Model | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | DefinitionUnit | ExpressionBlock | ForStatement | IfStatement | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'MemberCall';
     arguments: Array<Expression>;
     element?: Reference<NamedElement>;
@@ -197,12 +227,12 @@ export function isMemberCall(item: unknown): item is MemberCall {
 }
 
 export interface MethodMember extends AstNode {
-    readonly $container: Class | ExpressionBlock | ForStatement | Model;
+    readonly $container: Class | DefinitionUnit | ExpressionBlock | ForStatement | ImplementationUnit;
     readonly $type: 'MethodMember';
     body: ExpressionBlock;
     name: string;
     parameters: Array<Parameter>;
-    returnType: TypeReference;
+    returnType: Reference<Class>;
 }
 
 export const MethodMember = 'MethodMember';
@@ -211,19 +241,8 @@ export function isMethodMember(item: unknown): item is MethodMember {
     return reflection.isInstance(item, MethodMember);
 }
 
-export interface Model extends AstNode {
-    readonly $type: 'Model';
-    elements: Array<Element>;
-}
-
-export const Model = 'Model';
-
-export function isModel(item: unknown): item is Model {
-    return reflection.isInstance(item, Model);
-}
-
 export interface NilExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | MemberCall | Model | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | DefinitionUnit | ExpressionBlock | ForStatement | IfStatement | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'NilExpression';
     value: 'nil';
 }
@@ -234,23 +253,11 @@ export function isNilExpression(item: unknown): item is NilExpression {
     return reflection.isInstance(item, NilExpression);
 }
 
-export interface NumberExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | MemberCall | Model | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
-    readonly $type: 'NumberExpression';
-    value: number;
-}
-
-export const NumberExpression = 'NumberExpression';
-
-export function isNumberExpression(item: unknown): item is NumberExpression {
-    return reflection.isInstance(item, NumberExpression);
-}
-
 export interface Parameter extends AstNode {
-    readonly $container: ExpressionBlock | ForStatement | FunctionDeclaration | MethodMember | Model;
+    readonly $container: DefinitionUnit | ExpressionBlock | ForStatement | FunctionDeclaration | ImplementationUnit | MethodMember;
     readonly $type: 'Parameter';
     name: string;
-    type: TypeReference;
+    type: Reference<Class>;
 }
 
 export const Parameter = 'Parameter';
@@ -260,7 +267,7 @@ export function isParameter(item: unknown): item is Parameter {
 }
 
 export interface PrintStatement extends AstNode {
-    readonly $container: ExpressionBlock | Model;
+    readonly $container: DefinitionUnit | ExpressionBlock;
     readonly $type: 'PrintStatement';
     value: Expression;
 }
@@ -272,7 +279,7 @@ export function isPrintStatement(item: unknown): item is PrintStatement {
 }
 
 export interface ReturnStatement extends AstNode {
-    readonly $container: ExpressionBlock | Model;
+    readonly $container: DefinitionUnit | ExpressionBlock;
     readonly $type: 'ReturnStatement';
     value?: Expression;
 }
@@ -284,7 +291,7 @@ export function isReturnStatement(item: unknown): item is ReturnStatement {
 }
 
 export interface StringExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | MemberCall | Model | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | DefinitionUnit | ExpressionBlock | ForStatement | IfStatement | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'StringExpression';
     value: string;
 }
@@ -295,37 +302,8 @@ export function isStringExpression(item: unknown): item is StringExpression {
     return reflection.isInstance(item, StringExpression);
 }
 
-export interface TryCatchStatement extends AstNode {
-    readonly $container: ExpressionBlock | Model;
-    readonly $type: 'TryCatchStatement';
-    block: ExpressionBlock;
-    catchBlock: ExpressionBlock;
-    exception: string;
-}
-
-export const TryCatchStatement = 'TryCatchStatement';
-
-export function isTryCatchStatement(item: unknown): item is TryCatchStatement {
-    return reflection.isInstance(item, TryCatchStatement);
-}
-
-export interface TypeReference extends AstNode {
-    readonly $container: FieldMember | FunctionDeclaration | LambdaParameter | MethodMember | Parameter | TypeReference | VariableDeclaration;
-    readonly $type: 'TypeReference';
-    parameters: Array<LambdaParameter>;
-    primitive?: 'Bool' | 'DateTime' | 'Integer' | 'String';
-    reference?: Reference<Class>;
-    returnType?: TypeReference;
-}
-
-export const TypeReference = 'TypeReference';
-
-export function isTypeReference(item: unknown): item is TypeReference {
-    return reflection.isInstance(item, TypeReference);
-}
-
 export interface UnaryExpression extends AstNode {
-    readonly $container: BinaryExpression | ExpressionBlock | ForStatement | IfStatement | MemberCall | Model | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
+    readonly $container: BinaryExpression | DefinitionUnit | ExpressionBlock | ForStatement | IfStatement | MemberCall | PrintStatement | ReturnStatement | UnaryExpression | VariableDeclaration | WhileStatement;
     readonly $type: 'UnaryExpression';
     operator: '!' | '+' | '-';
     value: Expression;
@@ -338,11 +316,11 @@ export function isUnaryExpression(item: unknown): item is UnaryExpression {
 }
 
 export interface VariableDeclaration extends AstNode {
-    readonly $container: ExpressionBlock | ForStatement | Model;
+    readonly $container: DefinitionUnit | ExpressionBlock | ForStatement | ImplementationUnit;
     readonly $type: 'VariableDeclaration';
     assignment: boolean;
     name: string;
-    type: TypeReference;
+    type: Reference<Class>;
     value?: Expression;
 }
 
@@ -353,7 +331,7 @@ export function isVariableDeclaration(item: unknown): item is VariableDeclaratio
 }
 
 export interface WhileStatement extends AstNode {
-    readonly $container: ExpressionBlock | Model;
+    readonly $container: DefinitionUnit | ExpressionBlock;
     readonly $type: 'WhileStatement';
     block: ExpressionBlock;
     condition: Expression;
@@ -368,8 +346,11 @@ export function isWhileStatement(item: unknown): item is WhileStatement {
 export type CrmscriptAstType = {
     BinaryExpression: BinaryExpression
     BooleanExpression: BooleanExpression
+    Builtin: Builtin
     Class: Class
     ClassMember: ClassMember
+    CrmscriptElement: CrmscriptElement
+    DefinitionUnit: DefinitionUnit
     Element: Element
     Expression: Expression
     ExpressionBlock: ExpressionBlock
@@ -377,20 +358,16 @@ export type CrmscriptAstType = {
     ForStatement: ForStatement
     FunctionDeclaration: FunctionDeclaration
     IfStatement: IfStatement
-    Increment: Increment
-    LambdaParameter: LambdaParameter
+    ImplementationUnit: ImplementationUnit
+    IntegerExpression: IntegerExpression
     MemberCall: MemberCall
     MethodMember: MethodMember
-    Model: Model
     NamedElement: NamedElement
     NilExpression: NilExpression
-    NumberExpression: NumberExpression
     Parameter: Parameter
     PrintStatement: PrintStatement
     ReturnStatement: ReturnStatement
     StringExpression: StringExpression
-    TryCatchStatement: TryCatchStatement
-    TypeReference: TypeReference
     UnaryExpression: UnaryExpression
     VariableDeclaration: VariableDeclaration
     WhileStatement: WhileStatement
@@ -399,32 +376,34 @@ export type CrmscriptAstType = {
 export class CrmscriptAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return ['BinaryExpression', 'BooleanExpression', 'Class', 'ClassMember', 'Element', 'Expression', 'ExpressionBlock', 'FieldMember', 'ForStatement', 'FunctionDeclaration', 'IfStatement', 'Increment', 'LambdaParameter', 'MemberCall', 'MethodMember', 'Model', 'NamedElement', 'NilExpression', 'NumberExpression', 'Parameter', 'PrintStatement', 'ReturnStatement', 'StringExpression', 'TryCatchStatement', 'TypeReference', 'UnaryExpression', 'VariableDeclaration', 'WhileStatement'];
+        return ['BinaryExpression', 'BooleanExpression', 'Builtin', 'Class', 'ClassMember', 'CrmscriptElement', 'DefinitionUnit', 'Element', 'Expression', 'ExpressionBlock', 'FieldMember', 'ForStatement', 'FunctionDeclaration', 'IfStatement', 'ImplementationUnit', 'IntegerExpression', 'MemberCall', 'MethodMember', 'NamedElement', 'NilExpression', 'Parameter', 'PrintStatement', 'ReturnStatement', 'StringExpression', 'UnaryExpression', 'VariableDeclaration', 'WhileStatement'];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
         switch (subtype) {
             case BinaryExpression:
             case BooleanExpression:
+            case IntegerExpression:
             case MemberCall:
             case NilExpression:
-            case NumberExpression:
             case StringExpression:
             case UnaryExpression: {
                 return this.isSubtype(Expression, supertype);
             }
+            case Builtin: {
+                return this.isSubtype(CrmscriptElement, supertype);
+            }
             case Class:
-            case FunctionDeclaration: {
-                return this.isSubtype(Element, supertype) || this.isSubtype(NamedElement, supertype);
+            case Parameter:
+            case VariableDeclaration: {
+                return this.isSubtype(NamedElement, supertype);
             }
             case Expression:
             case ExpressionBlock:
             case ForStatement:
             case IfStatement:
-            case NamedElement:
             case PrintStatement:
             case ReturnStatement:
-            case TryCatchStatement:
             case WhileStatement: {
                 return this.isSubtype(Element, supertype);
             }
@@ -432,9 +411,11 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
             case MethodMember: {
                 return this.isSubtype(ClassMember, supertype) || this.isSubtype(NamedElement, supertype);
             }
-            case Parameter:
-            case VariableDeclaration: {
-                return this.isSubtype(NamedElement, supertype);
+            case FunctionDeclaration: {
+                return this.isSubtype(Element, supertype) || this.isSubtype(NamedElement, supertype);
+            }
+            case NamedElement: {
+                return this.isSubtype(CrmscriptElement, supertype) || this.isSubtype(Element, supertype);
             }
             default: {
                 return false;
@@ -445,11 +426,16 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
     getReferenceType(refInfo: ReferenceInfo): string {
         const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
+            case 'Builtin:class':
+            case 'FieldMember:type':
+            case 'FunctionDeclaration:returnType':
+            case 'MethodMember:returnType':
+            case 'Parameter:type':
+            case 'VariableDeclaration:type': {
+                return Class;
+            }
             case 'MemberCall:element': {
                 return NamedElement;
-            }
-            case 'TypeReference:reference': {
-                return Class;
             }
             default: {
                 throw new Error(`${referenceId} is not a valid reference id.`);
@@ -477,12 +463,29 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
+            case 'Builtin': {
+                return {
+                    name: 'Builtin',
+                    properties: [
+                        { name: 'class' },
+                        { name: 'name' }
+                    ]
+                };
+            }
             case 'Class': {
                 return {
                     name: 'Class',
                     properties: [
                         { name: 'members', defaultValue: [] },
                         { name: 'name' }
+                    ]
+                };
+            }
+            case 'DefinitionUnit': {
+                return {
+                    name: 'DefinitionUnit',
+                    properties: [
+                        { name: 'elements', defaultValue: [] }
                     ]
                 };
             }
@@ -510,7 +513,7 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                         { name: 'block' },
                         { name: 'condition' },
                         { name: 'counter' },
-                        { name: 'increment' }
+                        { name: 'execution' }
                     ]
                 };
             }
@@ -535,20 +538,19 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
-            case 'Increment': {
+            case 'ImplementationUnit': {
                 return {
-                    name: 'Increment',
+                    name: 'ImplementationUnit',
                     properties: [
-                        { name: 'var' }
+                        { name: 'elements', defaultValue: [] }
                     ]
                 };
             }
-            case 'LambdaParameter': {
+            case 'IntegerExpression': {
                 return {
-                    name: 'LambdaParameter',
+                    name: 'IntegerExpression',
                     properties: [
-                        { name: 'name' },
-                        { name: 'type' }
+                        { name: 'value' }
                     ]
                 };
             }
@@ -574,25 +576,9 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
-            case 'Model': {
-                return {
-                    name: 'Model',
-                    properties: [
-                        { name: 'elements', defaultValue: [] }
-                    ]
-                };
-            }
             case 'NilExpression': {
                 return {
                     name: 'NilExpression',
-                    properties: [
-                        { name: 'value' }
-                    ]
-                };
-            }
-            case 'NumberExpression': {
-                return {
-                    name: 'NumberExpression',
                     properties: [
                         { name: 'value' }
                     ]
@@ -628,27 +614,6 @@ export class CrmscriptAstReflection extends AbstractAstReflection {
                     name: 'StringExpression',
                     properties: [
                         { name: 'value' }
-                    ]
-                };
-            }
-            case 'TryCatchStatement': {
-                return {
-                    name: 'TryCatchStatement',
-                    properties: [
-                        { name: 'block' },
-                        { name: 'catchBlock' },
-                        { name: 'exception' }
-                    ]
-                };
-            }
-            case 'TypeReference': {
-                return {
-                    name: 'TypeReference',
-                    properties: [
-                        { name: 'parameters', defaultValue: [] },
-                        { name: 'primitive' },
-                        { name: 'reference' },
-                        { name: 'returnType' }
                     ]
                 };
             }

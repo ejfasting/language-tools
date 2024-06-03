@@ -25,15 +25,8 @@ Integer i = 213213;
 
 for(Integer i = 0; i > 20; i++){
     Integer j = i + 20;
-    String bla = "123";
+    String bla = "123" + 20;
     
-}
-
-class Customer {
-    String name;
-    Integer age;
-    Bool isVip;
-    DateTime lastVisit;
 }
 
 try{
@@ -43,4 +36,27 @@ catch(exception){
 
 }
 
+
+/** Hover*/
+class CustomClass {
+  String customerString;
+  Integer customerInteger;
+  Integer myFunction(){
+    
+    return 123;
+  }
+}
+
+struct myStruct {
+    String structString;
+    Integer structInt;
+    Customer cust;
+
+    String myFunction(){
+      this.
+      return "123";
+  }
+};
+
+Customer c;
 

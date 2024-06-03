@@ -1,5 +1,5 @@
 {
-  "name": "@superoffice/vscode",
+  "name": "vscode-superoffice",
   "description": "",
   "author": "Eivind Fasting",
   "version": "0.0.1",
@@ -26,12 +26,22 @@
         "configuration": "./jsfso-language-configuration.json"
       },
       {
-        "id": "crmscript",
-        "extensions": [
-          ".crmscript"
+        "id": "crmscript-definition",
+        "aliases": [
+            "crmscript Definition",
+            "crmscript-definition"
         ],
+        "extensions": [".crmscript-definition"],
         "configuration": "./crmscript-language-configuration.json"
-      }
+    }, {
+        "id": "crmscript-implementation",
+        "aliases": [
+            "crmscript Implementation",
+            "crmscript-implementation"
+        ],
+        "extensions": [".crmscript"],
+        "configuration": "./crmscript-language-configuration.json"
+    }
     ],
     "grammars": [
       {
@@ -40,36 +50,41 @@
         "path": "./syntaxes/jsfso.tmLanguage.json"
       },
       {
-        "language": "crmscript",
-        "scopeName": "source.crmscript",
-        "path": "./syntaxes/crmscript.tmLanguage.json"
-      }
+        "language": "crmscript-definition",
+        "scopeName": "source.crmscript-definition",
+        "path": "./syntaxes/crmscript-definition.tmLanguage.json"
+    },
+    {
+        "language": "crmscript-implementation",
+        "scopeName": "source.crmscript-implementation",
+        "path": "./syntaxes/crmscript-implementation.tmLanguage.json"
+    }
     ],
     "commands": [
       {
-        "command": "@superoffice/vscode.signIn",
+        "command": "signIn",
         "title": "Sign In",
         "icon": "$(log-in)",
         "category": "SuperOffice"
       },
       {
-        "command": "@superoffice/vscode.showScriptInfo",
+        "command": "showScriptInfo",
         "title": "ShowScriptInfo"
       },
       {
-        "command": "@superoffice/vscode.previewScript",
+        "command": "previewScript",
         "title": "PreviewScript"
       },
       {
-        "command": "@superoffice/vscode.downloadScript",
+        "command": "downloadScript",
         "title": "DownloadScript"
       },
       {
-        "command": "@superoffice/vscode.downloadScriptFolder",
+        "command": "downloadScriptFolder",
         "title": "DownloadScriptFolder"
       },
       {
-        "command": "@superoffice/vscode.executeScript",
+        "command": "executeScript",
         "title": "ExecuteScript",
         "category": "SuperOffice",
         "enablement": "resourceScheme == file"
@@ -95,24 +110,24 @@
     "viewsWelcome": [
       {
         "view": "superoffice.views.treeview",
-        "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:@superoffice/vscode.signIn)"
+        "contents": "You are not logged in to SuperOffice [learn more](https://docs.superoffice.com/).\n[Login](command:signIn)"
       }
     ],
     "menus": {
       "view/title": [],
       "view/item/context": [
         {
-          "command": "@superoffice/vscode.previewScript",
+          "command": "previewScript",
           "group": "0_script",
           "when": "view == superoffice.views.treeview && viewItem == script"
         },
         {
-          "command": "@superoffice/vscode.downloadScript",
+          "command": "downloadScript",
           "group": "0_script",
           "when": "view == superoffice.views.treeview && viewItem == script"
         },
         {
-          "command": "@superoffice/vscode.downloadScriptFolder",
+          "command": "downloadScriptFolder",
           "group": "0_script",
           "when": "view == superoffice.views.treeview && viewItem == folder"
         }
@@ -126,7 +141,7 @@
       ],
       "superoffice.submenu": [
         {
-          "command": "@superoffice/vscode.executeScript"
+          "command": "executeScript"
         }
       ]
     },
@@ -137,24 +152,6 @@
       }
     ],
     "configuration": [
-      {
-        "order": 22,
-        "id": "superoffice",
-        "title": "superoffice",
-        "properties": {
-          "superoffice.trace.server": {
-            "type": "string",
-            "scope": "window",
-            "enum": [
-              "off",
-              "messages",
-              "verbose"
-            ],
-            "default": "verbose",
-            "description": "Traces the communication between VS Code and the languageserver."
-          }
-        }
-      }
     ]
   },
   "scripts": {

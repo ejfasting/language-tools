@@ -1,4 +1,4 @@
-import { isClassType, isFunctionType, isNilType, TypeDescription } from "./descriptions.js";
+import { isClassType, isFunctionType, isNilType, TypeDescription, typeToString } from "./descriptions.js";
 import { getClassChain } from "./infer.js";
 
 export function isAssignable(from: TypeDescription, to: TypeDescription): boolean {
@@ -37,6 +37,9 @@ export function isAssignable(from: TypeDescription, to: TypeDescription): boolea
             }
         }
         return true;
+    }
+    if(isClassType(to)){
+        return typeToString(from) === typeToString(to);
     }
     return from.$type === to.$type;
 }

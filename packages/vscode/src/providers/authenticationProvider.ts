@@ -1,12 +1,11 @@
 //import * as vscode from 'vscode';
 import { commands, authentication, AuthenticationProvider, AuthenticationProviderAuthenticationSessionsChangeEvent, Disposable, EventEmitter, ExtensionContext, window } from "vscode";
 import { v4 as uuid } from 'uuid';
-import { authenticate } from '../services/authenticationService';
-import { TokenSet } from 'openid-client';
+import { IAuthenticationService } from '../services/authenticationService';
 import { SuperOfficeAuthenticationSession, UserClaims } from '../types';
-import { getSuoFile, writeSuoFile } from '../workspace/fileSystemHandler';
-import { treeViewDataProvider } from '../extension';
 import { getTenantStateAsync } from '../services/systemService';
+import { IFileSystemHandler } from "../workspace/fileSystemHandler";
+import { TreeViewDataProvider } from "./treeViewDataProvider";
 
 export const AUTH_TYPE = `superoffice`;
 const AUTH_NAME = `SuperOffice`;
@@ -18,8 +17,14 @@ export let currentSession: SuperOfficeAuthenticationSession | null = null;
 export class SuperofficeAuthenticationProvider implements AuthenticationProvider, Disposable {
     private _sessionChangeEmitter = new EventEmitter<AuthenticationProviderAuthenticationSessionsChangeEvent>();
     private _disposable: Disposable;
-
-    constructor(private readonly context: ExtensionContext) {
+    private authenticationService: IAuthenticationService;
+    private fileSystemHandler: IFileSystemHandler;
+    private treeViewDataProvider: TreeViewDataProvider;
+    
+    constructor(private readonly context: ExtensionContext, authenticationService: IAuthenticationService, fileSystemHandler: IFileSystemHandler, treeViewDataProvider: TreeViewDataProvider) {
+        this.authenticationService = authenticationService;
+        this.fileSystemHandler = fileSystemHandler;
+        this.treeViewDataProvider = treeViewDataProvider;
         this._disposable = Disposable.from(
             authentication.registerAuthenticationProvider(AUTH_TYPE, AUTH_NAME, this, { supportsMultipleAccounts: false })
         );
@@ -43,7 +48,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
             const sessionArray = JSON.parse(allSessions) as SuperOfficeAuthenticationSession[];
 
             try {
-                const suoFile = await getSuoFile();
+                const suoFile = await this.fileSystemHandler.readSuoFileAsync();
                 const session = sessionArray.find(obj => obj.contextIdentifier === suoFile.contextIdentifier);
 
                 if (session) {
@@ -73,10 +78,9 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
      */
     public async createSession(_scopes: string[]): Promise<SuperOfficeAuthenticationSession> {
         try {
-            const environment = await this.selectEnvironment();
-
-            // //Run Authorization Code Flow with PKCE
-            const tokenSet = await authenticate(environment) as TokenSet;
+            //const environment = await this.selectEnvironment();
+            await this.authenticationService.initializeAsync();
+            const tokenSet = await this.authenticationService.authenticateAsync();  
 
             if (!tokenSet.access_token) {
                 throw new Error('Access token is missing from the authentication response.');
@@ -86,7 +90,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
             const claims: UserClaims = tokenSet.claims() as UserClaims;
             contextIdentifier = `${claims['http://schemes.superoffice.net/identity/ctx']}`;
 
-            const state = await getTenantStateAsync(environment, contextIdentifier);
+            const state = await getTenantStateAsync(this.authenticationService.getEnvironment(), contextIdentifier);
             if(!state.IsRunning){
                 throw new Error('The tenant is not running');
             }
@@ -107,7 +111,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
             };
 
             await this.context.secrets.store(SESSIONS_SECRET_KEY, JSON.stringify([session]));
-            await writeSuoFile(JSON.stringify({ contextIdentifier: contextIdentifier }));
+            await this.fileSystemHandler.writeSuoFileAsync(JSON.stringify({ contextIdentifier: contextIdentifier, environment: this.authenticationService.getEnvironment(), clientId: this.authenticationService.getClientId()}));
 
             this._sessionChangeEmitter.fire({ added: [session], removed: [], changed: [] });
 
@@ -159,7 +163,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
         currentSession = session;
         //Needed to help the package.json figure out if you are logged inn or not
         commands.executeCommand('setContext', 'authenticated', currentSession ?? false);
-        treeViewDataProvider.refresh();
+        this.treeViewDataProvider.refresh();
     }
 
     // This method is used to update the login status and refresh the tree
@@ -167,7 +171,7 @@ export class SuperofficeAuthenticationProvider implements AuthenticationProvider
         currentSession = null;
         //Needed to help the package.json figure out if you are logged inn or not
         commands.executeCommand('setContext', 'authenticated', false);
-        treeViewDataProvider.refresh();
+        this.treeViewDataProvider.refresh();
     }
 
     /**

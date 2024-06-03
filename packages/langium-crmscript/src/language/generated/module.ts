@@ -5,10 +5,16 @@
 
 import type { LangiumSharedCoreServices, LangiumCoreServices, LangiumGeneratedCoreServices, LangiumGeneratedSharedCoreServices, LanguageMetaData, Module } from 'langium';
 import { CrmscriptAstReflection } from './ast.js';
-import { CrmscriptGrammar } from './grammar.js';
+import { CrmscriptDefinitionGrammar, CrmscriptImplementationGrammar } from './grammar.js';
 
-export const CrmscriptLanguageMetaData = {
-    languageId: 'crmscript',
+export const CrmscriptDefinitionLanguageMetaData = {
+    languageId: 'crmscript-definition',
+    fileExtensions: ['.crmscript-definition'],
+    caseInsensitive: false
+} as const satisfies LanguageMetaData;
+
+export const CrmscriptImplementationLanguageMetaData = {
+    languageId: 'crmscript-implementation',
     fileExtensions: ['.crmscript'],
     caseInsensitive: false
 } as const satisfies LanguageMetaData;
@@ -17,8 +23,14 @@ export const CrmscriptGeneratedSharedModule: Module<LangiumSharedCoreServices, L
     AstReflection: () => new CrmscriptAstReflection()
 };
 
-export const CrmscriptGeneratedModule: Module<LangiumCoreServices, LangiumGeneratedCoreServices> = {
-    Grammar: () => CrmscriptGrammar(),
-    LanguageMetaData: () => CrmscriptLanguageMetaData,
+export const CrmscriptDefinitionGeneratedModule: Module<LangiumCoreServices, LangiumGeneratedCoreServices> = {
+    Grammar: () => CrmscriptDefinitionGrammar(),
+    LanguageMetaData: () => CrmscriptDefinitionLanguageMetaData,
+    parser: {}
+};
+
+export const CrmscriptImplementationGeneratedModule: Module<LangiumCoreServices, LangiumGeneratedCoreServices> = {
+    Grammar: () => CrmscriptImplementationGrammar(),
+    LanguageMetaData: () => CrmscriptImplementationLanguageMetaData,
     parser: {}
 };

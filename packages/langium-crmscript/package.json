@@ -1,22 +1,80 @@
 {
-  "name": "@superoffice/langium-crmscript",
-  "description": "Please enter a brief description here",
-  "version": "0.0.1",
-  "publisher": "SuperOffice",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ejfasting/language-tools"
-  },
-  "files": [
-    "out",
-    "src"
-  ],
-  "type": "module",
-  "scripts": {
-    "build": "tsc -b tsconfig.json",
-    "watch": "tsc -b tsconfig.json --watch",
-    "lint": "eslint src --ext ts",
-    "langium:generate": "langium generate",
-    "langium:watch": "langium generate --watch"
-  }
+    "name": "langium-crmscript",
+    "description": "Please enter a brief description here",
+    "version": "0.0.1",
+    "files": [
+        "out",
+        "src"
+    ],
+    "type": "module",
+    "scripts": {
+        "build": "tsc -b tsconfig.src.json && node esbuild.mjs",
+        "watch": "concurrently -n tsc,esbuild -c blue,yellow \"tsc -b tsconfig.src.json --watch\" \"node esbuild.mjs --watch\"",
+        "lint": "eslint src --ext ts",
+        "langium:generate": "langium generate",
+        "langium:watch": "langium generate --watch",
+        "vscode:prepublish": "npm run build && npm run lint",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "langium": "~3.0.0",
+        "vscode-languageclient": "~9.0.1",
+        "vscode-languageserver": "~9.0.1"
+    },
+    "devDependencies": {
+        "@types/node": "^18.0.0",
+        "@typescript-eslint/parser": "~6.4.1",
+        "@typescript-eslint/eslint-plugin": "~6.4.1",
+        "eslint": "~8.47.0",
+        "langium-cli": "~3.0.0",
+        "typescript": "~5.1.6",
+        "@types/vscode": "~1.67.0",
+        "concurrently": "~8.2.1",
+        "esbuild": "~0.19.2",
+        "vitest": "~1.0.0"
+    },
+    "displayName": "langium-crmscript",
+    "engines": {
+        "vscode": "^1.67.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "crmscript-definition",
+                "aliases": [
+                    "crmscript Definition",
+                    "crmscript-definition"
+                ],
+                "extensions": [".crmscript-definition"],
+                "configuration": "./language-configuration.json"
+            }, {
+                "id": "crmscript-implementation",
+                "aliases": [
+                    "crmscript Implementation",
+                    "crmscript-implementation"
+                ],
+                "extensions": [".crmscript"],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "crmscript-definition",
+                "scopeName": "source.crmscript-definition",
+                "path": "./syntaxes/crmscript-definition.tmLanguage.json"
+            },
+            {
+                "language": "crmscript-implementation",
+                "scopeName": "source.crmscript-implementation",
+                "path": "./syntaxes/crmscript-implementation.tmLanguage.json"
+            }
+        ]
+    },
+    "activationEvents": [
+        "onLanguage:crmscript"
+    ],
+    "main": "./out/extension/main.cjs"
 }

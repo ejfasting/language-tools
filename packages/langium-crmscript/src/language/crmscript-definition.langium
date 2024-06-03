@@ -1,6 +1,6 @@
-grammar Crmscript
+grammar CrmscriptDefinition
 
-entry Model:
+entry DefinitionUnit:
     elements+=Element*;
 
 Element: 
@@ -9,7 +9,6 @@ Element:
     IfStatement |
     WhileStatement |
     ForStatement |
-    TryCatchStatement |
     FunctionDeclaration |
     VariableDeclaration ';' | 
     PrintStatement ';' | 
@@ -27,15 +26,8 @@ WhileStatement:
 ;
 
 ForStatement:
-    'for' '(' counter=VariableDeclaration? ';' condition=Expression ';' increment=Increment? ')' block=ExpressionBlock
+    'for' '(' counter=VariableDeclaration? ';' condition=Expression? ';' execution=Expression? ')' block=ExpressionBlock
 ;
-
-TryCatchStatement:
-     'try' block=ExpressionBlock 'catch' '(' exception=ID ')' catchBlock=ExpressionBlock 
-;
-
-Increment:
-    var=ID '++';
 
 PrintStatement: 'print' value=Expression;
 
@@ -46,7 +38,7 @@ ExpressionBlock: '{'
 '}';
 
 VariableDeclaration returns NamedElement:
-    {infer VariableDeclaration} type=TypeReference name=ID (assignment?='=' value=Expression)?
+    {infer VariableDeclaration} type=[Class:ID] name=ID (assignment?='=' value=Expression)?
 ;
 
 Expression:
@@ -69,21 +61,21 @@ Comparison infers Expression:
 
 MemberCall infers Expression:
     Primary
-    ({infer MemberCall.previous=current} 
+	({infer MemberCall.previous=current} 
         // Member call with function call
         ("." element=[NamedElement:ID] (
-        explicitOperationCall?='('
-        (
-            arguments+=Expression (',' arguments+=Expression)*
-        )?
-        ')')? 
+		explicitOperationCall?='('
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		')')? 
         // Chained function call
         | (
-        explicitOperationCall?='('
-        (
-            arguments+=Expression (',' arguments+=Expression)*
-        )?
-        ')'))
+		explicitOperationCall?='('
+		(
+		    arguments+=Expression (',' arguments+=Expression)*
+		)?
+		')'))
     )*;
 
 Primary infers Expression:
@@ -91,53 +83,48 @@ Primary infers Expression:
     UnaryExpression |
     StringExpression |
     BooleanExpression |
-    NumberExpression |
+    IntegerExpression |
     NilExpression |
     FeatureCall;
 
 FeatureCall infers Expression:
-    {infer MemberCall}
-    (element=[NamedElement:ID] | element=[NamedElement:'this'] | element=[NamedElement:'super'])
+	{infer MemberCall}
+	(element=[NamedElement:ID] | element=[NamedElement:'this'] | element=[NamedElement:'super'])
     // Optional function call after referencing an element
     (explicitOperationCall?='('
-    (
-        arguments+=Expression (',' arguments+=Expression)*
-    )?
-    ')')?;
+	(
+	    arguments+=Expression (',' arguments+=Expression)*
+	)?
+	')')?;
 
 UnaryExpression:
    operator=('!' | '-' | '+') value=Expression
 ;
 
-NumberExpression: value=NUMBER;
+IntegerExpression: value=NUMBER;
 StringExpression: value=STRING;
 BooleanExpression: value?='true' | 'false';
 NilExpression: value='nil';
 
 FunctionDeclaration:
-    returnType=TypeReference name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' body=ExpressionBlock;
+    'fun' name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ':' returnType=[Class:ID] body=ExpressionBlock;
 
-Parameter: name=ID ':' type=TypeReference;
+Parameter: name=ID ':' type=[Class:ID];
 
-Class: 'class' name=ID '{'
+Class returns NamedElement: 
+    {infer Class} 'class' name=ID '{'
     members+=ClassMember*
 '}';
 
 ClassMember: MethodMember | FieldMember;
 
 MethodMember:
-    name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ':' returnType=TypeReference body=ExpressionBlock;
+    name=ID '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')' ':' returnType=[Class:ID] body=ExpressionBlock;
 
 FieldMember:
-    type=TypeReference name=ID ';';
+    type=[Class:ID] name=ID ';';
 
-TypeReference: reference=[Class:ID] 
-    | primitive=("String" | "Integer" | "Bool" | "DateTime") 
-    | '(' ( parameters+=LambdaParameter (',' parameters+=LambdaParameter)*)? ')' '=>' returnType=TypeReference;
-
-LambdaParameter: (name=ID ':')? type=TypeReference;
-
-type NamedElement = Parameter | FunctionDeclaration | VariableDeclaration | MethodMember | FieldMember | Class ;
+type NamedElement = Parameter | FunctionDeclaration | VariableDeclaration | MethodMember | FieldMember | Class;
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
@@ -145,4 +132,4 @@ terminal NUMBER returns number: /[0-9]+(\.[0-9]+)?/;
 terminal STRING: /"[^"]*"/;
 
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
-hidden terminal SL_COMMENT: /\/\/[^\n\r]*/; 
+hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;

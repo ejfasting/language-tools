@@ -1,0 +1,77 @@
+
+
+// ///Should be invalid
+// Integer invalidSetInteger = "123"; 
+// Integer invalidSetInteger2 = true; 
+// String invalidSetString = 123; 
+// String invalidSetString2 = true; 
+// Bool invalidSetBool = "123";
+// Bool invalidSetBool2 = 123;
+// Integer invalidSumInteger = 123 + "123";
+
+// String myStringFunction() {
+//   return 123;
+// }
+
+// Integer myIntegerFunction() {
+//   return "123";
+// }
+// //---------------------------------------  ---------------------------------------
+
+
+// /////Should be valid
+// "123";
+// 13213;
+// true;
+// Bool validEmptyBool;
+// Bool validSetBool = true;
+// String validEmptyString; 
+// String validSetString = "123"; 
+// String validSumString = "123" + "123";
+// Integer validEmptyInteger; 
+// Integer validSetInteger = 123; 
+// Integer validSumInteger = 123 + 123; 
+
+// for(Integer i = 0; i > 20; i++){
+//     Integer j = i + 20;
+//     String bla = "123" + 20;
+// }
+
+// String myStringFunction() {
+//   return "123";
+// }
+
+// Integer myIntegerFunction() {
+//   return 123;
+// }
+
+
+// try{}
+// catch(exception){}
+
+
+// /** Hover*/
+// //Builtin Class
+// Customer c;
+// c.firstName = "123";
+
+// //---------------------------------------  ---------------------------------------
+
+// //--------------------------------------- Not working correctly ---------------------------------------
+// //Not working correctly
+// String invalidSumString = 123 + "123"; // <= This should be invalid, need to look at the validation of number + string
+// //TODO: Implement Structs
+// // struct myStruct { //Hover returned from the checkStructDeclaration validation method
+// //     String structString;
+// //     Integer structInt;
+// //     Customer cust;
+// //     String getString(){
+// //       this.structString = "1232"; // <= this keyword is not recognized as a NamedElement (?)
+// //       return this.customerString; // Need to validate this is possible after the line above is working
+// //     }
+// // };
+
+// String temp = "123";
+// Integer int = 123;
+
+// temp.

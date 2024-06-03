@@ -2,7 +2,7 @@ import { HttpRequestResponse } from "../types";
 import * as https from 'https';
 import * as http from 'http';
 import { currentSession as session } from "../providers/authenticationProvider";
-
+//TODO: Refactor httpService to be a class, like the others
 export async function httpAuthenticatedRequestAsync<T>(path: string, method: https.RequestOptions["method"], body?: object): Promise<HttpRequestResponse<T>> {
     if (!session) {
         throw new Error("No session found");

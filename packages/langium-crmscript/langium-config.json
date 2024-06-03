@@ -1,11 +1,24 @@
 {
     "projectName": "Crmscript",
-    "languages": [{
-        "id": "crmscript",
-        "grammar": "src/language/crmscript.langium",
+    "languages": [ {
+        "id": "crmscript-definition",
+        "grammar": "src/language/crmscript-definition.langium",
+        "fileExtensions": [".crmscript-definition"],
+        "textMate": {
+            "out": "syntaxes/crmscript-definition.tmLanguage.json"
+        },
+        "monarch": {
+            "out": "syntaxes/crmscript-definition.monarch.ts"
+        }
+    }, {
+        "id": "crmscript-implementation",
+        "grammar": "src/language/crmscript-implementation.langium",
         "fileExtensions": [".crmscript"],
         "textMate": {
-            "out": "syntaxes/crmscript.tmLanguage.json"
+            "out": "syntaxes/crmscript-implementation.tmLanguage.json"
+        },
+        "monarch": {
+            "out": "syntaxes/crmscript-implementation.monarch.ts"
         }
     }],
     "out": "src/language/generated"

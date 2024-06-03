@@ -8,20 +8,19 @@ export const CONFIG_SCRIPTSERVICE = {
 };
 
 export const CONFIG_COMMANDS = {
-    CMD_SIGN_IN: '@superoffice/vscode.signIn',
-    CMD_SIGN_OUT: '@superoffice/vscode.signOut',
-    CMD_SHOW_SCRIPT_INFO: '@superoffice/vscode.showScriptInfo',
-    CMD_PREVIEW_SCRIPT: '@superoffice/vscode.previewScript',
-    CMD_DOWNLOAD_SCRIPT: '@superoffice/vscode.downloadScript',
-    CMD_DOWNLOAD_SCRIPTFOLDER: '@superoffice/vscode.downloadScriptFolder',
-    CMD_EXECUTE_SCRIPT: '@superoffice/vscode.executeScript',
+    CMD_SIGN_IN: 'signIn',
+    CMD_SIGN_OUT: 'signOut',
+    CMD_SHOW_SCRIPT_INFO: 'vscode-superoffice.showScriptInfo',
+    CMD_PREVIEW_SCRIPT: 'previewScript',
+    CMD_DOWNLOAD_SCRIPT: 'downloadScript',
+    CMD_DOWNLOAD_SCRIPTFOLDER: 'downloadScriptFolder',
+    CMD_EXECUTE_SCRIPT: 'executeScript',
     VFS_SCHEME: 'vfs',
-    CMD_EXECUTE_SCRIPT_LOCALLY: '@superoffice/vscode.executeScriptLocally'
+    CMD_EXECUTE_SCRIPT_LOCALLY: 'executeScriptLocally'
 };
 
 export const CONFIG_AUTHSERVICE = {
     REDIRECT_URI: 'http://127.0.0.1:8000',
-    CLIENT_ID: '1a5764a8090f136cc9d30f381626d5fa'
 };
 
 export const CONFIG_SYSTEMSERVICE = {
@@ -29,6 +28,6 @@ export const CONFIG_SYSTEMSERVICE = {
         `https://${environment}.superoffice.com/api/state/${contextIdentifier}`
 };
 
-export const CONFIG_FILESYSTEMHANDLER = {
+export const CONFIG = {
     SUOFILE_PATH: `./.superoffice/.suo`,
 };

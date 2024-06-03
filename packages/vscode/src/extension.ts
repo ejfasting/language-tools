@@ -10,21 +10,19 @@ import { CONFIG_COMMANDS } from './config';
 import { SuperofficeAuthenticationProvider } from './providers/authenticationProvider';
 import { registerCommands } from './commands';
 import { DslLibraryFileSystemProvider } from './providers/dslLibraryFileSystemProvider';
+import { superOfficeUriHandler } from './services/uriHandler';
+import { initializeServices } from './container';
 
 let client: lsp.BaseLanguageClient;
-
-export const treeViewDataProvider = new TreeViewDataProvider();
-export const vfsProvider = new VirtualFileSystemProvider();
 export let logoUri: vscode.Uri;
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext): Promise<LabsInfo> {
 	logoUri = vscode.Uri.joinPath(context.extensionUri, 'resources', 'logo.svg');
-
 	const serverModule = vscode.Uri.joinPath(context.extensionUri, 'dist', 'server.js');
 	const runOptions = { execArgv: <string[]>[] };
-	
+
 	const debugOptions = { execArgv: ['--nolazy', `--inspect${process.env.DEBUG_BREAK ? '-brk' : ''}=${process.env.DEBUG_SOCKET || '6009'}`] };
 	//const debugOptions = { execArgv: ['--nolazy', '--inspect=' + 6009] };
 	const serverOptions: lsp.ServerOptions = {
@@ -42,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 	const clientOptions: lsp.LanguageClientOptions = {
 		documentSelector: [
 			{ language: 'jsfso' },
-			{ language: 'crmscript'}			
+			{ language: 'crmscript-definition' }
 		],
 		initializationOptions: {
 			typescript: {
@@ -58,29 +56,32 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 	);
 	await client.start();
 
+	const { authenticationService, fileSystemHandler, scriptService, treeViewDataProvider, vfsProvider } = await initializeServices();
+
 	// Register Virtual File System Provider
-    vscode.workspace.registerFileSystemProvider(CONFIG_COMMANDS.VFS_SCHEME, vfsProvider, { isCaseSensitive: true });
-    // Register Tree View Data Provider
-    vscode.window.registerTreeDataProvider(TreeViewDataProvider.viewId, treeViewDataProvider);
+	vscode.workspace.registerFileSystemProvider(CONFIG_COMMANDS.VFS_SCHEME, vfsProvider, { isCaseSensitive: true });
+	// Register Tree View Data Provider
+	vscode.window.registerTreeDataProvider(TreeViewDataProvider.viewId, treeViewDataProvider);
 
 	// Register Authentication Provider
-    context.subscriptions.push(
-		new SuperofficeAuthenticationProvider(context)
+	context.subscriptions.push(
+		new SuperofficeAuthenticationProvider(context, authenticationService, fileSystemHandler, treeViewDataProvider)
 	);
 
 	//Register Commands
-    await registerCommands(context);
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "SuperOffice-vscode" is now active!');
-	
+	await registerCommands(context);
+
+	//Register UriHandler
+	context.subscriptions.push(vscode.window.registerUriHandler(superOfficeUriHandler));
+
+	//Langium
 	DslLibraryFileSystemProvider.register(context);
-	//TODO: Volar labs needs to be active in the debug-window for the extension, so you can run it with --disable-extensions if you want the proper intellisense.. 
+
+	//Volar labs
 	const labsInfo = createLabsInfo(serverProtocol);
 	labsInfo.addLanguageClient(client);
 	return labsInfo.extensionExports;
 }
 
 // This method is called when your extension is deactivated
-export function deactivate(): void {}
+export function deactivate(): void { }

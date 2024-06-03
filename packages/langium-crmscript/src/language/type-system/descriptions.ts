@@ -3,16 +3,16 @@ import { AstNode } from "langium";
 import {
     BooleanExpression,
     Class,
-    NumberExpression,
+    IntegerExpression,
     StringExpression
-} from "../generated/ast.js";
+} from "../generated/ast.js"
 
 export type TypeDescription =
     | NilTypeDescription
     | VoidTypeDescription
     | BooleanTypeDescription
     | StringTypeDescription
-    | NumberTypeDescription
+    | IntegerTypeDescription
     | FunctionTypeDescription
     | ClassTypeDescription
     | ErrorType;
@@ -38,7 +38,7 @@ export interface VoidTypeDescription {
 export function createVoidType(): VoidTypeDescription {
     return {
         $type: "void"
-    };
+    }
 }
 
 export function isVoidType(item: TypeDescription): item is VoidTypeDescription {
@@ -62,35 +62,35 @@ export function isBooleanType(item: TypeDescription): item is BooleanTypeDescrip
 }
 
 export interface StringTypeDescription {
-    readonly $type: "string"
+    readonly $type: "String"
     readonly literal?: StringExpression
 }
 
 export function createStringType(literal?: StringExpression): StringTypeDescription {
     return {
-        $type: "string",
+        $type: "String",
         literal
     };
 }
 
 export function isStringType(item: TypeDescription): item is StringTypeDescription {
-    return item.$type === "string";
+    return item.$type === "String";
 }
 
-export interface NumberTypeDescription {
-    readonly $type: "number",
-    readonly literal?: NumberExpression
+export interface IntegerTypeDescription {
+    readonly $type: "Integer",
+    readonly literal?: IntegerExpression
 }
 
-export function createNumberType(literal?: NumberExpression): NumberTypeDescription {
+export function createIntegerType(literal?: IntegerExpression): IntegerTypeDescription {
     return {
-        $type: "number",
+        $type: "Integer",
         literal
     };
 }
 
-export function isNumberType(item: TypeDescription): item is NumberTypeDescription {
-    return item.$type === "number";
+export function isIntegerType(item: TypeDescription): item is IntegerTypeDescription {
+    return item.$type === "Integer";
 }
 
 export interface FunctionTypeDescription {

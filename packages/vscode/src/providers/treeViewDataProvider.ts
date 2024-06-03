@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
 import { ScriptInfo } from '../types';
-import { getAllScriptInfoAsync } from '../services/scriptService';
+import { IScriptService } from '../services/scriptService';
 import { currentSession } from './authenticationProvider';
 import { logoUri } from '../extension';
+import { CONFIG_COMMANDS } from '../config';
 
 ///const logoUri = vscode.Uri.joinPath(vscode.extensions.getExtension('superoffice.@superoffice/vscode')!.extensionUri, 'resources', 'logo.svg');
 const iconPath = {
@@ -19,11 +20,11 @@ export class Node implements vscode.TreeItem {
     contextValue: string;
     collapsibleState: vscode.TreeItemCollapsibleState;
     constructor(
-        public readonly label: string, 
+        public readonly label: string,
         public readonly children?: Node[],
         public readonly iconPath?: vscode.ThemeIcon | { light: vscode.Uri; dark: vscode.Uri },
         public readonly command?: vscode.Command,
-        public readonly scriptInfo?: ScriptInfo
+        public readonly scriptInfo?: ScriptInfo,
     ) {
         this.contextValue = scriptInfo ? 'script' : 'folder';
         this.collapsibleState = (this.children?.length ?? 0) > 0 
@@ -36,8 +37,8 @@ function convertTreeDataToNode(data: TreeDataItem): Node {
     return new Node(
         data.label, 
         data.children.map(convertTreeDataToNode), 
-        data.scriptInfo ? iconPath : new vscode.ThemeIcon('folder'), 
-        data.scriptInfo ? { command: '@superoffice/vscode.showScriptInfo', title: 'Show Script Info', arguments: [data.scriptInfo] } : undefined,
+        data.scriptInfo ? new vscode.ThemeIcon('code') : new vscode.ThemeIcon('folder'), 
+        data.scriptInfo ? { command: CONFIG_COMMANDS.CMD_SHOW_SCRIPT_INFO, title: 'Show Script Info', arguments: [data.scriptInfo] } : undefined,
         data.scriptInfo
         );
 }
@@ -71,6 +72,11 @@ function addToTreeData(root: TreeDataItem, scriptPath: string, scriptInfo: Scrip
 export class TreeViewDataProvider implements vscode.TreeDataProvider<Node> {
     private _onDidChangeTreeData: vscode.EventEmitter<Node | undefined> = new vscode.EventEmitter<Node | undefined>();
     readonly onDidChangeTreeData: vscode.Event<Node | undefined> = this._onDidChangeTreeData.event;
+    scriptService: IScriptService;
+
+    constructor(scriptService: IScriptService){
+        this.scriptService =  scriptService;
+    }
 
     public static readonly viewId = 'superoffice.views.treeview';
 
@@ -91,9 +97,10 @@ export class TreeViewDataProvider implements vscode.TreeDataProvider<Node> {
         //Check if user is logged in
         if (currentSession) {
             try {
-                const scriptResponseData = await getAllScriptInfoAsync();
+                const scriptResponseData = await this.scriptService.getAllScriptInfoAsync();
                 const root: TreeDataItem = { label: 'Root', children: [] };
                 scriptResponseData.value.forEach(script => addToTreeData(root, script.path, script));
+                console.log("something: " + iconPath);
                 return root.children.map(convertTreeDataToNode);
             } catch (err) {
                 if (err instanceof Error) {

@@ -36,13 +36,13 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 			if (uri.endsWith('.jsfso')) {
 				return 'jsfso';
 			}
-			else if (uri.endsWith('.crmscript')) {
-				return 'crmscript';
+			else if (uri.endsWith('.crmscript-definition')) {
+				return 'crmscript-definition';
 			}
 		},
 
 		createVirtualCode(_uri, languageId, snapshot) {
-			if ((languageId === 'jsfso') || (languageId === 'crmscript')) {
+			if ((languageId === 'jsfso') || (languageId === 'crmscript-definition')) {
 				return new SuperOfficeVirtualCode(snapshot, languageId);
 			}
 
@@ -52,7 +52,7 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 			return languageCode;
 		},
 		typescript: {
-			extraFileExtensions: [{ extension: 'crmscript', isMixedContent: true, scriptKind: 0 satisfies ts.ScriptKind.Unknown }],
+			extraFileExtensions: [{ extension: 'crmscript-definition', isMixedContent: true, scriptKind: 0 satisfies ts.ScriptKind.Unknown }],
 			getServiceScript() {
 				return undefined;
 			},
@@ -149,7 +149,7 @@ class SuperOfficeVirtualCode implements VirtualCode {
 		const generated = volarToString(superOfficeSegments);
 		yield {
 			id: this.scriptType,
-			languageId: this.scriptType === 'jsfso' ? 'typescript' : 'crmscript',
+			languageId: this.scriptType === 'jsfso' ? 'typescript' : 'crmscript-definition',
 			snapshot: {
 				getText: (start, end) => generated.slice(start, end),
 				getLength: () => generated.length,

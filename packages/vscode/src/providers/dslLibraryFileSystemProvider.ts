@@ -11,7 +11,7 @@ String mySecondString = "007";
 
 export class DslLibraryFileSystemProvider implements vscode.FileSystemProvider {
 
-    static register(context: vscode.ExtensionContext) {
+    static register(context: vscode.ExtensionContext): void {
         context.subscriptions.push(
             vscode.workspace.registerFileSystemProvider('builtin', new DslLibraryFileSystemProvider(), {
                 isReadonly: true,
