@@ -41,7 +41,7 @@ async function createAndSetWorker(language: Language){
 
   const languageIds = [language.id];
   const getSyncUris = () => editor.getModels().map(model => model.uri);
-  volar.activateMarkers(worker, languageIds, language.id, getSyncUris, editor);
-  volar.activateAutoInsertion(worker, languageIds, getSyncUris, editor);
-  await volar.registerProviders(worker, languageIds, getSyncUris, editorLanguages);
+  volar.activateMarkers(worker as any, languageIds, language.id, getSyncUris, editor);
+  volar.activateAutoInsertion(worker as any, languageIds, getSyncUris, editor);
+  await volar.registerProviders(worker as any, languageIds, getSyncUris, editorLanguages);
 }

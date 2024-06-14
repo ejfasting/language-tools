@@ -12,6 +12,12 @@
 		"skipLibCheck": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"baseUrl": "./"
-    },
+		"baseUrl": "./",
+		"paths": {
+			"*": [
+				"node_modules/*"
+			]
+		}
+	},
+	"include": ["packages/**/*"]
 }

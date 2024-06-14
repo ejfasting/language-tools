@@ -1,11 +1,38 @@
 import * as vscode from 'vscode';
 import { SuoFile } from '../types';
 import { CONFIG } from '../config';
-//TODO: Move this to a service instead?
+
 export interface IFileSystemHandler {
+    /**
+     * Creates a folder at the specified path, in the local workspace.
+     * @param relativePath The relative path to the desired file within the workspace.
+     * @returns The content of the file as a Uint8Array.
+     * @throws {Error} If the file cannot be written to.
+     * @returns A promise that resolves when the folder has been created.
+     */
     writeFileAsync(relativePath: string, content: string): Promise<vscode.Uri>;
+
+    /**
+     * Creates a folder at the specified path, in the local workspace.
+     * @param folderPath The path to the folder to create.
+     * @throws {Error} If the folder cannot be created.
+     * @returns A promise that resolves when the folder has been created.
+     */
     createFolderAsync(folderPath: vscode.Uri): Promise<void>;
+
+    /**
+     * Reads the .suo-file from the local workspace.
+     * @returns The content of the file as a Uint8Array.
+     * @throws {Error} If the file cannot be read.
+     */
     readSuoFileAsync(): Promise<SuoFile>;
+
+    /**
+     * Writes the .suo-file to the local workspace.
+     * @param content The content to write to the file.
+     * @returns A promise that resolves when the file has been written. 
+     * @throws {Error} If the file cannot be written to.
+     */
     writeSuoFileAsync(content: string): Promise<vscode.Uri>;
 }
 
@@ -29,6 +56,12 @@ export class FileSystemHandler implements IFileSystemHandler {
         return vscode.Uri.joinPath(workspaceFolder.uri, relativePath);
     }
 
+    /**
+     * Reads a file from the local workspace.
+     * @param relativePath The relative path to the desired file within the workspace.
+     * @returns The content of the file as a Uint8Array.
+     * @throws {Error} If the file cannot be read.
+     */
     public async readFileAsync(relativePath: string): Promise<Uint8Array> {
         try {
             const data = await vscode.workspace.fs.readFile(this.getFileUriInWorkspace(relativePath));
@@ -41,12 +74,17 @@ export class FileSystemHandler implements IFileSystemHandler {
         }
     }
 
-    // Write file to relativePath
+    /**
+     * Writes content to a file at the specified path.
+     * @param relativePath The relative path to the desired file within the workspace.
+     * @param content The content to write to the file.
+     * @returns The URI of the written file.
+     * @throws {Error} If the file cannot be written to.
+     */
     public async writeFileAsync(relativePath: string, content: string): Promise<vscode.Uri> {
         const fileUri = this.getFileUriInWorkspace(relativePath);
-        const dirUri = fileUri.with({ path: fileUri.path.replace(/\/[^/]+$/, '') }); // remove the last segment of the path to get the directory
+        const dirUri = fileUri.with({ path: fileUri.path.replace(/\/[^/]+$/, '') });
 
-        // Ensure directory structure exists
         await this.ensureDirectoryExistsAsync(dirUri);
 
         try {
@@ -61,6 +99,11 @@ export class FileSystemHandler implements IFileSystemHandler {
         }
     }
 
+    /**
+     * Creates a folder at the specified path.
+     * @param folderPath The path to the folder to create.
+     * @throws {Error} If the folder cannot be created.
+     */
     public async createFolderAsync(folderPath: vscode.Uri): Promise<void> {
         try {
             await vscode.workspace.fs.createDirectory(folderPath);
@@ -69,6 +112,11 @@ export class FileSystemHandler implements IFileSystemHandler {
         }
     }
 
+    /**
+     * Ensures that the directory exists.
+     * @param folderPath The path to the folder.
+     * @throws {Error} If an error occurs while ensuring the directory exists.
+     */
     private async ensureDirectoryExistsAsync(folderPath: vscode.Uri): Promise<void> {
         try {
             await vscode.workspace.fs.stat(folderPath);
@@ -83,23 +131,38 @@ export class FileSystemHandler implements IFileSystemHandler {
         }
     }
 
+    /**
+     * Reads the .suo file from the local workspace.
+     * @returns The content of the .suo file.
+     * @throws {Error} If the file cannot be read or parsed.
+     */
     public async readSuoFileAsync(): Promise<SuoFile> {
         try {
             const suoFileContent = await this.readFileAsync(CONFIG.SUOFILE_PATH);
             const suoFile = JSON.parse(suoFileContent.toString());
-             // Validate manually
-             this.validateSuoFile(suoFile);
+            this.validateSuoFile(suoFile);
 
-            return JSON.parse(suoFileContent.toString()) as SuoFile;
+            return suoFile as SuoFile;
         } catch (error) {
             throw new Error(`Error reading or parsing suoFile ${CONFIG.SUOFILE_PATH}: ${error}`);
         }
     }
 
+    /**
+     * Writes content to the .suo file.
+     * @param content The content to write to the file.
+     * @returns The URI of the written file.
+     * @throws {Error} If the file cannot be written to.
+     */
     public async writeSuoFileAsync(content: string): Promise<vscode.Uri> {
         return await this.writeFileAsync(CONFIG.SUOFILE_PATH, content);
     }
 
+    /**
+     * Validates the .suo file content.
+     * @param suoFile The content of the .suo file.
+     * @throws {Error} If the .suo file content is invalid.
+     */
     private validateSuoFile(suoFile: SuoFile): void {
         if (typeof suoFile.clientId !== 'string') {
             throw new Error("Invalid suoFile: 'clientId' is required and must be a string.");

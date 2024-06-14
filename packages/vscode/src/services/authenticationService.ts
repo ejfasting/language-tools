@@ -3,7 +3,7 @@ import { createServer, Server } from 'http';
 import { parse } from 'url';
 import * as vscode from 'vscode';
 import { CONFIG_AUTHSERVICE } from "../config";
-import { IFileSystemHandler } from "../workspace/fileSystemHandler";
+import { IFileSystemHandler } from "../handlers/fileSystemHandler";
 
 
 // Configuration variables
@@ -13,8 +13,8 @@ let server: Server | null = null;
 let codeVerifier: string;
 
 interface AuthServiceDependencies {
-    Issuer: typeof Issuer;
-    generators: typeof generators;
+    issuer: typeof Issuer;
+    //generators: typeof generators;
     parse: typeof parse;
     createServer: typeof createServer;
     vscode: typeof vscode;
@@ -69,7 +69,7 @@ export class AuthenticationService implements IAuthenticationService  {
     }
 
     private async generateAuthorizeUrlAsync(): Promise<string> {
-        const { Issuer, generators } = this.dependencies;
+        //const { Issuer, generators } = this.dependencies;
         const superOfficeIssuer = await Issuer.discover(`https://${this.environment}.superoffice.com/login/.well-known/openid-configuration`);
 
         const client = new superOfficeIssuer.Client(this.clientMetadata);
@@ -151,8 +151,8 @@ export class AuthenticationService implements IAuthenticationService  {
             throw new Error("Client metadata not initialized");
         }
 
-        const { Issuer } = this.dependencies;
-        const superOfficeIssuer = await Issuer.discover(`https://${this.environment}.superoffice.com/login/.well-known/openid-configuration`);
+        const { issuer } = this.dependencies;
+        const superOfficeIssuer = await issuer.discover(`https://${this.environment}.superoffice.com/login/.well-known/openid-configuration`);
 
         const client = new superOfficeIssuer.Client(this.clientMetadata);
         try {

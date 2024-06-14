@@ -5,7 +5,7 @@ import { LabsInfo, createLabsInfo, getTsdk } from '@volar/vscode';
 import * as vscode from 'vscode';
 import * as lsp from 'vscode-languageclient/node';
 import { TreeViewDataProvider } from './providers/treeViewDataProvider';
-import { VirtualFileSystemProvider } from './workspace/virtualWorkspaceFileManager';
+//import { VirtualFileSystemProvider } from './handlers/virtualWorkspaceFileManager';
 import { CONFIG_COMMANDS } from './config';
 import { SuperofficeAuthenticationProvider } from './providers/authenticationProvider';
 import { registerCommands } from './commands';
@@ -37,6 +37,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 			options: debugOptions
 		},
 	};
+
 	const clientOptions: lsp.LanguageClientOptions = {
 		documentSelector: [
 			{ language: 'jsfso' },
@@ -44,7 +45,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 		],
 		initializationOptions: {
 			typescript: {
-				tsdk: (await getTsdk(context)).tsdk,
+				tsdk: (await getTsdk(context))!.tsdk,
 			}
 		},
 	};
@@ -56,7 +57,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<LabsIn
 	);
 	await client.start();
 
-	const { authenticationService, fileSystemHandler, scriptService, treeViewDataProvider, vfsProvider } = await initializeServices();
+	const { authenticationService, fileSystemHandler, /*scriptService, */treeViewDataProvider, vfsProvider } = await initializeServices();
 
 	// Register Virtual File System Provider
 	vscode.workspace.registerFileSystemProvider(CONFIG_COMMANDS.VFS_SCHEME, vfsProvider, { isCaseSensitive: true });

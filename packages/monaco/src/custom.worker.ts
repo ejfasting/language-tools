@@ -11,22 +11,28 @@ import {
 // import { service as crmscriptLanguageService } from "@superoffice/language-service/crmscriptLanguageService.js";
 // import { suoLanguagePlugin } from "@superoffice/language-service/suoLanguagePlugin.js";
 
-import { create as createCrmscriptService } from '@superoffice/language-server/src/plugins/crmscript.js';
+import { create as createCrmscriptService } from '@superoffice/language-server/src/plugins/crmscript-definition.js';
 import { getSuperOfficeLanguageModule } from '@superoffice/language-server/src/core/superoffice.js';
 
 import ts from 'typescript';
-import { create as createTypeScriptService } from 'volar-service-typescript';
 import { create as createEmmetService } from 'volar-service-emmet';
 import { create as createHtmlService } from 'volar-service-html';
 import { create as createCssService } from 'volar-service-css';
+import { create as createTypeScriptService } from 'volar-service-typescript';
+import { createCrmscriptServices } from '@superoffice/langium-crmscript/src/language/crmscript-module.js';
+
+import { NodeFileSystem } from 'langium/node';
+
+// Inject the shared services and language-specific services
+const { shared, Definition } = createCrmscriptServices({ ...NodeFileSystem });
 
 self.onmessage = () => {
 	worker.initialize((ctx: monaco.worker.IWorkerContext) => {
 		const env: ServiceEnvironment = {
 			workspaceFolder: 'file:///',
 			typescript: {
-				uriToFileName: uri => uri.substring('file://'.length),
-				fileNameToUri: fileName => 'file://' + fileName,
+				uriToFileName: (uri: string) => uri.substring('file://'.length),
+				fileNameToUri: (fileName: string) => 'file://' + fileName,
 			},
 		};
 
@@ -42,6 +48,7 @@ self.onmessage = () => {
 			workerContext: ctx,
 			env,
 			languagePlugins: [
+				//TODO: Figure this out
 				getSuperOfficeLanguageModule()
 			],
 			servicePlugins: [
@@ -50,7 +57,7 @@ self.onmessage = () => {
 				createCssService(),
 				createEmmetService({}),
 				...createTypeScriptService(ts),
-				createCrmscriptService(),
+				createCrmscriptService({ sharedService: shared, definitionService: Definition }),
 			],
 		});
 	});

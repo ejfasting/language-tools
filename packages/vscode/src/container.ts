@@ -1,14 +1,14 @@
 // container.ts
 
 import * as vscode from 'vscode';
-import { Issuer, generators } from 'openid-client';
+import { Issuer as issuer } from 'openid-client';
 import { createServer } from 'http';
 import { AuthenticationService, IAuthenticationService } from './services/authenticationService';
 import { parse } from 'url';
-import { FileSystemHandler, IFileSystemHandler } from './workspace/fileSystemHandler';
+import { FileSystemHandler, IFileSystemHandler } from './handlers/fileSystemHandler';
 import { IScriptService, ScriptService } from './services/scriptService';
 import { TreeViewDataProvider } from './providers/treeViewDataProvider';
-import { VirtualFileSystemProvider } from './workspace/virtualWorkspaceFileManager';
+import { VirtualFileSystemProvider } from './handlers/virtualWorkspaceFileManager';
 
 export async function initializeServices(): Promise<{
     authenticationService: IAuthenticationService,
@@ -20,8 +20,8 @@ export async function initializeServices(): Promise<{
     const fileSystemHandler: IFileSystemHandler = new FileSystemHandler();
 
     const authenticationService: IAuthenticationService = new AuthenticationService({
-        Issuer,
-        generators,
+        issuer,
+        //generators,
         parse,
         createServer,
         vscode

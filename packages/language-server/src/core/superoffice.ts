@@ -47,10 +47,6 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 			}
 
 		},
-		updateVirtualCode(_uri, languageCode, newSnapshot) {
-			languageCode.update(newSnapshot);
-			return languageCode;
-		},
 		typescript: {
 			extraFileExtensions: [{ extension: 'crmscript-definition', isMixedContent: true, scriptKind: 0 satisfies ts.ScriptKind.Unknown }],
 			getServiceScript() {
@@ -151,7 +147,7 @@ class SuperOfficeVirtualCode implements VirtualCode {
 			id: this.scriptType,
 			languageId: this.scriptType === 'jsfso' ? 'typescript' : 'crmscript-definition',
 			snapshot: {
-				getText: (start, end) => generated.slice(start, end),
+				getText: (start: number | undefined, end: number | undefined) => generated.slice(start, end),
 				getLength: () => generated.length,
 				getChangeRange: () => undefined,
 			},
@@ -199,7 +195,7 @@ class SuperOfficeVirtualCode implements VirtualCode {
 			id: 'html',
 			languageId: 'html',
 			snapshot: {
-				getText: (start, end) => generated.slice(start, end),
+				getText: (start: number | undefined, end: number | undefined) => generated.slice(start, end),
 				getLength: () => generated.length,
 				getChangeRange: () => undefined,
 			},
@@ -268,7 +264,7 @@ class SuperOfficeVirtualCode implements VirtualCode {
 					id: 'style_' + styles++,
 					languageId: 'css',
 					snapshot: {
-						getText: (start, end) => styleText.substring(start, end),
+						getText: (start: number, end: number | undefined) => styleText.substring(start, end),
 						getLength: () => styleText.length,
 						getChangeRange: () => undefined,
 					},
@@ -296,7 +292,7 @@ class SuperOfficeVirtualCode implements VirtualCode {
 					id: 'script_' + scripts++,
 					languageId: isTs ? 'typescript' : 'javascript',
 					snapshot: {
-						getText: (start, end) => text.substring(start, end),
+						getText: (start: number, end: number | undefined) => text.substring(start, end),
 						getLength: () => text.length,
 						getChangeRange: () => undefined,
 					},

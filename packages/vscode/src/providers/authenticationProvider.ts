@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { IAuthenticationService } from '../services/authenticationService';
 import { SuperOfficeAuthenticationSession, UserClaims } from '../types';
 import { getTenantStateAsync } from '../services/systemService';
-import { IFileSystemHandler } from "../workspace/fileSystemHandler";
+import { IFileSystemHandler } from "../handlers/fileSystemHandler";
 import { TreeViewDataProvider } from "./treeViewDataProvider";
 
 export const AUTH_TYPE = `superoffice`;

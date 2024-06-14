@@ -20,7 +20,7 @@ export const CONFIG_COMMANDS = {
 };
 
 export const CONFIG_AUTHSERVICE = {
-    REDIRECT_URI: 'http://127.0.0.1:8000',
+    REDIRECT_URI: 'http://127.0.0.1:8000'
 };
 
 export const CONFIG_SYSTEMSERVICE = {

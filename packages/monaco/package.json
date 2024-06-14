@@ -12,5 +12,11 @@
     "dev": "vite",
     "build": "tsc && vite build --base=./",
     "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@volar/language-service": "~2.2.0",
+    "@volar/monaco": "~2.2.0",
+    "vite": "^5.2.10",
+    "monaco-editor": "^0.47.0"
   }
 }
