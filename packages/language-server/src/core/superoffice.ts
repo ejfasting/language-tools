@@ -13,7 +13,7 @@ import ts, { ModuleResolutionKind } from 'typescript';
 import * as html from 'vscode-html-languageservice';
 
 // Constants
-const npmImport = `import * as RTL from "@superoffice/webapi";\n`;
+const npmImport = `import { WebApi } from "@superoffice/webapi";const SO = new WebApi();\n`;
 const EJSCRIPT_START = '%EJSCRIPT_START%';
 const EJSCRIPT_END = '%EJSCRIPT_END%';
 const SCRIPT_START = '<%';
