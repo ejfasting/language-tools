@@ -1,14 +1,17 @@
 %EJSCRIPT_START%
-
 <style>.foo { c }</style>
 <div></div>
 <%
-const temp = new RTL.CRMScriptAgent();
+const cAgent = SO.getContactAgent();
+const cEntity = await cAgent.createDefaultContactEntityAsync();
+cEntity.name = "BigCompany AS";
 
- %>
-<div></div>
+const pAgent = SO.getPersonAgent();
+const pEntity = await pAgent.createDefaultPersonEntityAsync();
+pEntity.firstname = "123";
+
+%>
 <script> 
 let foo: string = 123; 
 </script>
-</HTML>
 %EJSCRIPT_END%
