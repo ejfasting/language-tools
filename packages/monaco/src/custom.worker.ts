@@ -11,7 +11,7 @@ import { URI } from 'vscode-uri';
 // import { suoLanguagePlugin } from "@superoffice/language-service/suoLanguagePlugin.js";
 
 import { create as createCrmscriptService } from '@superoffice/language-server/src/plugins/crmscript-definition.js';
-import { getSuperOfficeLanguageModule } from '@superoffice/language-server/src/core/superoffice.js';
+import { getSuperOfficeLanguagePlugin } from '@superoffice/language-server/src/core/superoffice.js';
 
 import ts from 'typescript';
 import { create as createEmmetService } from 'volar-service-emmet';
@@ -46,7 +46,7 @@ self.onmessage = () => {
 			env,
 			languagePlugins: [
 				//TODO: Figure this out
-				getSuperOfficeLanguageModule()
+				getSuperOfficeLanguagePlugin()
 			],
 			languageServicePlugins: [
 				// ...

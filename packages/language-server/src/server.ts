@@ -2,10 +2,10 @@ import { create as createEmmetService } from 'volar-service-emmet';
 import { create as createHtmlService } from 'volar-service-html';
 import { create as createCssService } from 'volar-service-css';
 import { create as createTypeScriptService } from 'volar-service-typescript';
-import { createServer, createConnection, createTypeScriptProjectProvider, loadTsdkByPath } from '@volar/language-server/node.js';
+import { createServer, createConnection, createTypeScriptProject, loadTsdkByPath } from '@volar/language-server/node.js';
 
 import { create as createCrmscriptService } from './plugins/crmscript-definition.js';
-import { getSuperOfficeLanguageModule } from './core/superoffice.js';
+import { getSuperOfficeLanguagePlugin } from './core/superoffice.js';
 
 import { createCrmscriptServices } from '@superoffice/langium-crmscript/src/language/crmscript-module.js';
 import { NodeFileSystem } from 'langium/node';
@@ -36,6 +36,9 @@ connection.onInitialize(params => {
 	const tsdk = loadTsdkByPath(params.initializationOptions.typescript.tsdk, params.locale);
 	return server.initialize(
 		params,
+		createTypeScriptProject(tsdk.typescript, tsdk.diagnosticMessages, () => ({
+			languagePlugins: [getSuperOfficeLanguagePlugin()],
+		})),
 		[
 			createHtmlService(),
 			createCssService(),
@@ -43,7 +46,6 @@ connection.onInitialize(params => {
 			...createTypeScriptService(tsdk.typescript, {}),
 			createCrmscriptService({ sharedService: shared, definitionService: Definition }),
 		],
-		createTypeScriptProjectProvider(tsdk.typescript, tsdk.diagnosticMessages, () => [getSuperOfficeLanguageModule()]),
 	);
 });
 

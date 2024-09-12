@@ -30,7 +30,7 @@ const typescriptFeatures = {
 
 const htmlLs = html.getLanguageService();
 
-export function getSuperOfficeLanguageModule(): LanguagePlugin<URI, SuperOfficeVirtualCode> {
+export function getSuperOfficeLanguagePlugin(): LanguagePlugin<URI, SuperOfficeVirtualCode> {
 	return {
 		getLanguageId(uri) {
 			if (uri.path.endsWith('.jsfso')) {
