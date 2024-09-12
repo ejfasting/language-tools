@@ -1,16 +1,16 @@
 import {
-	forEachEmbeddedCode,
-	ExtraServiceScript,
-	type LanguagePlugin,
-	VirtualCode,
 	CodeInformation,
 	CodeMapping,
-	Segment,
-	toString as volarToString,
-	buildMappings,
+	forEachEmbeddedCode,
+	type LanguagePlugin,
+	Mapping,
+	VirtualCode,
 } from '@volar/language-core';
+import { TypeScriptExtraServiceScript } from '@volar/typescript';
+import { type Segment, toString as volarToString } from 'muggle-string';
 import ts, { ModuleResolutionKind } from 'typescript';
 import * as html from 'vscode-html-languageservice';
+import { URI } from 'vscode-uri';
 
 // Constants
 const npmImport = `import { WebApi } from "@superoffice/webapi";const SO = new WebApi();\n`;
@@ -30,13 +30,13 @@ const typescriptFeatures = {
 
 const htmlLs = html.getLanguageService();
 
-export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtualCode> {
+export function getSuperOfficeLanguageModule(): LanguagePlugin<URI, SuperOfficeVirtualCode> {
 	return {
 		getLanguageId(uri) {
-			if (uri.endsWith('.jsfso')) {
+			if (uri.path.endsWith('.jsfso')) {
 				return 'jsfso';
 			}
-			else if (uri.endsWith('.crmscript-definition')) {
+			else if (uri.path.endsWith('.crmscript-definition')) {
 				return 'crmscript-definition';
 			}
 		},
@@ -53,7 +53,7 @@ export function getSuperOfficeLanguageModule(): LanguagePlugin<SuperOfficeVirtua
 				return undefined;
 			},
 			getExtraServiceScripts(fileName, root) {
-				const scripts: ExtraServiceScript[] = [];
+				const scripts: TypeScriptExtraServiceScript[] = [];
 				for (const code of forEachEmbeddedCode(root)) {
 					if (code.languageId === 'javascript') {
 						scripts.push({
@@ -314,4 +314,23 @@ class SuperOfficeVirtualCode implements VirtualCode {
 			}
 		}
 	}
+}
+
+function buildMappings<T>(chunks: Segment<T>[]) {
+	let length = 0;
+	const mappings: Mapping<T>[] = [];
+	for (const segment of chunks) {
+		if (typeof segment === 'string') {
+			length += segment.length;
+		} else {
+			mappings.push({
+				sourceOffsets: [segment[2]],
+				generatedOffsets: [length],
+				lengths: [segment[0].length],
+				data: segment[3]!,
+			});
+			length += segment[0].length;
+		}
+	}
+	return mappings;
 }

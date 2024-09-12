@@ -16,7 +16,9 @@
         "build:prod": "node ./scripts/build.mjs --production"
     },
     "devDependencies": {
-        "@volar/language-core": "~2.2.0",
-        "vscode-html-languageservice": "^5.2.0"
+        "@volar/language-core": "~2.4.0",
+        "@volar/typescript": "~2.4.0",
+        "muggle-string": "^0.4.1",
+        "vscode-html-languageservice": "^5.3.1"
     }
 }

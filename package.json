@@ -26,11 +26,11 @@
     "devDependencies": {
         "@types/node": "latest",
         "typescript": "latest",
-        "@volar/language-server": "~2.2.0",
-        "volar-service-css": "volar-2.2",
-		"volar-service-emmet": "volar-2.2",
-		"volar-service-html": "volar-2.2",
-		"volar-service-typescript": "volar-2.2",
+        "@volar/language-server": "~2.4.0",
+        "volar-service-css": "volar-2.4",
+        "volar-service-emmet": "volar-2.4",
+        "volar-service-html": "volar-2.4",
+        "volar-service-typescript": "volar-2.4",
         "@superoffice/langium-crmscript": "link:packages\\langium-crmscript",
         "@superoffice/language-server": "link:packages\\language-server",
         "langium": "^3.0.0",
@@ -40,6 +40,6 @@
         "@superoffice/webapi": "^10.3.4"
     },
     "workspaces": [
-    "packages/*"
-  ]
+        "packages/*"
+    ]
 }
