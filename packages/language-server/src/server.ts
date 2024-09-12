@@ -51,7 +51,7 @@ connection.onInitialize(params => {
 
 connection.onInitialized(params => {
 	shared.workspace.WorkspaceManager.initialized(params);
-	return server.initialized;
+	server.initialized();
 });
 
 connection.onShutdown(server.shutdown);
