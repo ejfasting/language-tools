@@ -14,9 +14,10 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@volar/language-service": "~2.2.0",
-    "@volar/monaco": "~2.2.0",
+    "@volar/jsdelivr": "~2.4.0",
+    "@volar/language-service": "~2.4.0",
+    "@volar/monaco": "~2.4.0",
     "vite": "^5.2.10",
-    "monaco-editor": "^0.47.0"
+    "monaco-editor": "^0.51.0"
   }
 }

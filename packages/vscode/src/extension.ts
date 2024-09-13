@@ -3,7 +3,7 @@
 import * as serverProtocol from '@volar/language-server/protocol';
 import { LabsInfo, createLabsInfo, getTsdk } from '@volar/vscode';
 import * as vscode from 'vscode';
-import * as lsp from 'vscode-languageclient/node';
+import * as lsp from '@volar/vscode/node';
 import { TreeViewDataProvider } from './providers/treeViewDataProvider';
 //import { VirtualFileSystemProvider } from './handlers/virtualWorkspaceFileManager';
 import { CONFIG_COMMANDS } from './config';

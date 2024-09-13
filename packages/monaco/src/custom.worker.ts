@@ -1,18 +1,17 @@
 import * as worker from 'monaco-editor/esm/vs/editor/editor.worker';
 import type * as monaco from 'monaco-editor';
 import {
-    createTypeScriptWorkerService,
-    ServiceEnvironment,
-	activateAutomaticTypeAcquisition,
+	createTypeScriptWorkerLanguageService,
+	type LanguageServiceEnvironment,
 } from '@volar/monaco/worker.js';
-
-
+import { createNpmFileSystem } from '@volar/jsdelivr';
+import { URI } from 'vscode-uri';
 
 // import { service as crmscriptLanguageService } from "@superoffice/language-service/crmscriptLanguageService.js";
 // import { suoLanguagePlugin } from "@superoffice/language-service/suoLanguagePlugin.js";
 
 import { create as createCrmscriptService } from '@superoffice/language-server/src/plugins/crmscript-definition.js';
-import { getSuperOfficeLanguageModule } from '@superoffice/language-server/src/core/superoffice.js';
+import { getSuperOfficeLanguagePlugin } from '@superoffice/language-server/src/core/superoffice.js';
 
 import ts from 'typescript';
 import { create as createEmmetService } from 'volar-service-emmet';
@@ -28,30 +27,28 @@ const { shared, Definition } = createCrmscriptServices({ ...NodeFileSystem });
 
 self.onmessage = () => {
 	worker.initialize((ctx: monaco.worker.IWorkerContext) => {
-		const env: ServiceEnvironment = {
-			workspaceFolder: 'file:///',
-			typescript: {
-				uriToFileName: (uri: string) => uri.substring('file://'.length),
-				fileNameToUri: (fileName: string) => 'file://' + fileName,
-			},
+		const env: LanguageServiceEnvironment = {
+			workspaceFolders: [URI.parse('file:///')],
+			fs: createNpmFileSystem(),
 		};
+		const asFileName = (uri: URI) => uri.path
+		const asUri = (fileName: string): URI => URI.file(fileName)
 
-		activateAutomaticTypeAcquisition(env);
-		return createTypeScriptWorkerService({
+		return createTypeScriptWorkerLanguageService({
 			typescript: ts,
 			compilerOptions: {
-                ...ts.getDefaultCompilerOptions(),
-                allowJs: true,
-                module: ts.ModuleKind.ESNext,
+				...ts.getDefaultCompilerOptions(),
+				allowJs: true,
+				module: ts.ModuleKind.ESNext,
 				target: ts.ScriptTarget.ESNext,
-            },
+			},
 			workerContext: ctx,
 			env,
 			languagePlugins: [
 				//TODO: Figure this out
-				getSuperOfficeLanguageModule()
+				getSuperOfficeLanguagePlugin()
 			],
-			servicePlugins: [
+			languageServicePlugins: [
 				// ...
 				createHtmlService(),
 				createCssService(),
@@ -59,6 +56,10 @@ self.onmessage = () => {
 				...createTypeScriptService(ts),
 				createCrmscriptService({ sharedService: shared, definitionService: Definition }),
 			],
+			uriConverter: {
+				asFileName,
+				asUri,
+			},
 		});
 	});
 };

@@ -14,6 +14,14 @@ export function create({
 }): LanguageServicePlugin {
   return {
     name: 'crmscript',
+    capabilities: {
+      completionProvider: {},
+      hoverProvider: true,
+      diagnosticProvider: {
+        interFileDependencies: false,
+        workspaceDiagnostics: false,
+      },
+    },
     create(): LanguageServicePluginInstance {
       return {
         async provideCompletionItems(document: TextDocument, position: Position, _: CompletionContext, token: CancellationToken) {
